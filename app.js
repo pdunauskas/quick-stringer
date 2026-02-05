@@ -7,13 +7,15 @@ const state = {
   settings: {
     currency: "USD",
     tensionUnit: "kg",
-    language: "en"
-  }
+    language: "en",
+    stringerName: ""
+  },
+  lastJobCustomerId: ""
 };
 
 const storageKey = "quick-stringer-data";
 const onboardingKey = "quick-stringer-onboarding";
-const schemaVersion = 4;
+const schemaVersion = 6;
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
@@ -27,23 +29,40 @@ const translations = {
     app_subtitle: "Simple shop manager for rackets, strings, and jobs.",
     tab_dashboard: "Dashboard",
     tab_settings: "Settings",
+    tab_info: "Info",
     tab_customers: "Customers",
     tab_rackets: "Rackets",
     tab_inventory: "String Inventory",
     tab_jobs: "Stringing Jobs",
     dashboard_today: "Today",
+    dashboard_8weeks: "Past 8 Weeks",
     dashboard_jobs_month: "Jobs This Month",
     dashboard_revenue_month: "Revenue This Month",
     dashboard_inventory_items: "Inventory Items",
     dashboard_jobs_8weeks: "Jobs (Last 8 Weeks)",
     dashboard_revenue_8weeks: "Revenue (Last 8 Weeks)",
+    dashboard_costs_8weeks: "String Costs (Last 8 Weeks)",
+    dashboard_profit_8weeks: "Profit (Last 8 Weeks)",
     dashboard_avg_time: "Avg Stringing Time",
+    dashboard_stats_title: "Statistics",
+    dashboard_stats_subtitle: "Totals and inventory overview.",
+    dashboard_total_length: "Total String Length Used",
+    dashboard_total_customers: "Total Customers",
+    dashboard_total_jobs: "Total Stringing Jobs",
+    dashboard_total_time: "Total Time Spent",
+    dashboard_total_profit: "Total Profit",
+    dashboard_greeting: "Hello",
+    dashboard_greeting: "Hello",
+    dashboard_inventory_left: "Inventory Left",
+    dashboard_no_inventory: "No inventory yet.",
     dashboard_quick_add: "Quick Add Job",
     dashboard_quick_add_desc: "Log a stringing job in under a minute.",
     cta_add_job: "Add Job",
     settings_title: "General Settings",
     settings_subtitle: "Customize your defaults for currency and tension units.",
     settings_language: "Language",
+    settings_stringer_name: "Stringer Name",
+    settings_stringer_name: "Stringer Name",
     settings_currency: "Currency",
     settings_tension_unit: "Tension Unit",
     settings_kg: "Kilograms (kg)",
@@ -83,6 +102,10 @@ const translations = {
     inventory_color: "Color",
     inventory_length: "Length (meters)",
     inventory_length_short: "Length (m)",
+    inventory_initial_length: "Initial Length (meters)",
+    inventory_length_left: "Length Left (meters)",
+    inventory_initial_short: "Initial (m)",
+    inventory_length_left_short: "Length Left (m)",
     inventory_total_cost: "Total Spool Cost",
     inventory_cost_per_m: "Cost / m",
     inventory_add: "Add Inventory",
@@ -107,6 +130,7 @@ const translations = {
     jobs_tension: "Tension",
     jobs_length_used: "Length Used (meters)",
     jobs_labor_price: "Labor Price",
+    jobs_labor_header: "Labor",
     jobs_string_price: "String Price",
     jobs_calc: "Calculate",
     jobs_time: "Time (mm:ss)",
@@ -122,6 +146,21 @@ const translations = {
     footer_export_csv: "Export CSV",
     footer_import: "Import Data",
     footer_reset: "Reset All Data",
+    info_title: "How This App Works",
+    info_subtitle: "Simple, private, and fully in your browser.",
+    info_step1_title: "1. You enter your data",
+    info_step1_desc: "Customers, rackets, strings, and jobs are saved only in your browser.",
+    info_step2_title: "2. The app calculates totals",
+    info_step2_desc: "Revenue, costs, and timing are calculated locally on your device.",
+    info_step3_title: "3. You export backups",
+    info_step3_desc: "Export JSON or CSV ZIP regularly so you never lose data.",
+    info_privacy_title: "Data Privacy",
+    info_privacy_desc: "This webpage does not send or store your data on a server. Everything stays in your browser.",
+    info_export_note: "Always export your data before exiting the page, otherwise you may lose it.",
+    info_backup_title: "Backups",
+    info_backup_desc: "There are two types of backups:",
+    info_backup_export: "Export Data: use this to back up and later upload to continue working.",
+    info_backup_csv: "Export CSV: extra export for third‑party apps, not importable back here.",
     onboarding_title: "Welcome to Quick Stringer",
     onboarding_subtitle: "Here’s the fastest way to start tracking your stringing work.",
     onboarding_step1_title: "1. Add Customers",
@@ -158,23 +197,38 @@ const translations = {
     app_subtitle: "Paprastas raketų, stygų ir darbų valdymas.",
     tab_dashboard: "Skydelis",
     tab_settings: "Nustatymai",
+    tab_info: "Info",
     tab_customers: "Klientai",
     tab_rackets: "Raketės",
     tab_inventory: "Stygų inventorius",
     tab_jobs: "Stygavimo darbai",
     dashboard_today: "Šiandien",
+    dashboard_8weeks: "Paskutinės 8 savaitės",
     dashboard_jobs_month: "Darbai šį mėn.",
     dashboard_revenue_month: "Pajamos šį mėn.",
     dashboard_inventory_items: "Inventoriaus įrašai",
     dashboard_jobs_8weeks: "Darbai (paskutinės 8 sav.)",
     dashboard_revenue_8weeks: "Pajamos (paskutinės 8 sav.)",
+    dashboard_costs_8weeks: "Stygų kaštai (paskutinės 8 sav.)",
+    dashboard_profit_8weeks: "Pelnas (paskutinės 8 sav.)",
     dashboard_avg_time: "Vid. stygavimo laikas",
+    dashboard_stats_title: "Statistika",
+    dashboard_stats_subtitle: "Suminiai rodikliai ir inventoriaus apžvalga.",
+    dashboard_total_length: "Iš viso panaudotas stygų ilgis",
+    dashboard_total_customers: "Iš viso klientų",
+    dashboard_total_jobs: "Iš viso stygavimų",
+    dashboard_total_time: "Iš viso sugaišta laiko",
+    dashboard_total_profit: "Bendras pelnas",
+    dashboard_greeting: "Sveiki",
+    dashboard_inventory_left: "Likęs inventorius",
+    dashboard_no_inventory: "Inventoriaus nėra.",
     dashboard_quick_add: "Greitas darbas",
     dashboard_quick_add_desc: "Užregistruokite stygavimą per minutę.",
     cta_add_job: "Pridėti darbą",
     settings_title: "Bendri nustatymai",
     settings_subtitle: "Nustatykite valiutą ir įtempimo vienetus.",
     settings_language: "Kalba",
+    settings_stringer_name: "Stygavimo meistro vardas",
     settings_currency: "Valiuta",
     settings_tension_unit: "Įtempimo vienetas",
     settings_kg: "Kilogramai (kg)",
@@ -214,6 +268,10 @@ const translations = {
     inventory_color: "Spalva",
     inventory_length: "Ilgis (metrai)",
     inventory_length_short: "Ilgis (m)",
+    inventory_initial_length: "Pradinis ilgis (metrai)",
+    inventory_length_left: "Likęs ilgis (metrai)",
+    inventory_initial_short: "Pradinis (m)",
+    inventory_length_left_short: "Likęs (m)",
     inventory_total_cost: "Rulono kaina",
     inventory_cost_per_m: "Kaina / m",
     inventory_add: "Pridėti inventorių",
@@ -238,6 +296,7 @@ const translations = {
     jobs_tension: "Įtempimas",
     jobs_length_used: "Naudotas ilgis (metrai)",
     jobs_labor_price: "Darbo kaina",
+    jobs_labor_header: "Darbas",
     jobs_string_price: "Stygos kaina",
     jobs_calc: "Skaičiuoti",
     jobs_time: "Laikas (mm:ss)",
@@ -253,6 +312,21 @@ const translations = {
     footer_export_csv: "CSV eksportas",
     footer_import: "Importuoti",
     footer_reset: "Ištrinti viską",
+    info_title: "Kaip veikia ši programa",
+    info_subtitle: "Paprasta, privatu ir tik naršyklėje.",
+    info_step1_title: "1. Jūs įvedate duomenis",
+    info_step1_desc: "Klientai, raketės, stygos ir darbai saugomi tik naršyklėje.",
+    info_step2_title: "2. Programa skaičiuoja sumas",
+    info_step2_desc: "Pajamos, kaštai ir laikas skaičiuojami jūsų įrenginyje.",
+    info_step3_title: "3. Jūs eksportuojate kopijas",
+    info_step3_desc: "Reguliariai eksportuokite JSON arba CSV ZIP.",
+    info_privacy_title: "Duomenų privatumas",
+    info_privacy_desc: "Ši svetainė nesiunčia ir nesaugo jūsų duomenų serveryje.",
+    info_export_note: "Visada eksportuokite duomenis prieš išeidami, kitaip juos galite prarasti.",
+    info_backup_title: "Atsarginės kopijos",
+    info_backup_desc: "Yra du atsarginių kopijų tipai:",
+    info_backup_export: "Eksportuoti duomenis: naudokite atsarginei kopijai ir vėliau įkelkite tęsti darbą.",
+    info_backup_csv: "Eksportuoti CSV: papildoma išklotinė trečiųjų šalių programoms, jos neįmanoma importuoti.",
     onboarding_title: "Sveiki atvykę į Quick Stringer",
     onboarding_subtitle: "Greitas startas stygavimo darbams sekti.",
     onboarding_step1_title: "1. Pridėkite klientus",
@@ -289,23 +363,38 @@ const translations = {
     app_subtitle: "Einfaches Management für Schläger, Saiten und Jobs.",
     tab_dashboard: "Übersicht",
     tab_settings: "Einstellungen",
+    tab_info: "Info",
     tab_customers: "Kunden",
     tab_rackets: "Schläger",
     tab_inventory: "Saitenlager",
     tab_jobs: "Bespannungen",
     dashboard_today: "Heute",
+    dashboard_8weeks: "Letzte 8 Wochen",
     dashboard_jobs_month: "Jobs diesen Monat",
     dashboard_revenue_month: "Umsatz diesen Monat",
     dashboard_inventory_items: "Lagerartikel",
     dashboard_jobs_8weeks: "Jobs (letzte 8 Wochen)",
     dashboard_revenue_8weeks: "Umsatz (letzte 8 Wochen)",
+    dashboard_costs_8weeks: "Saitenkosten (letzte 8 Wochen)",
+    dashboard_profit_8weeks: "Gewinn (letzte 8 Wochen)",
     dashboard_avg_time: "Durchschn. Bespannzeit",
+    dashboard_stats_title: "Statistik",
+    dashboard_stats_subtitle: "Summen und Lagerübersicht.",
+    dashboard_total_length: "Gesamte Saitenlänge genutzt",
+    dashboard_total_customers: "Kunden gesamt",
+    dashboard_total_jobs: "Bespannungen gesamt",
+    dashboard_total_time: "Gesamtzeit",
+    dashboard_total_profit: "Gesamtgewinn",
+    dashboard_greeting: "Hallo",
+    dashboard_inventory_left: "Restbestand",
+    dashboard_no_inventory: "Noch kein Lagerbestand.",
     dashboard_quick_add: "Schnell hinzufügen",
     dashboard_quick_add_desc: "Job in unter einer Minute erfassen.",
     cta_add_job: "Job hinzufügen",
     settings_title: "Allgemeine Einstellungen",
     settings_subtitle: "Währung und Spannungseinheit festlegen.",
     settings_language: "Sprache",
+    settings_stringer_name: "Bespanner Name",
     settings_currency: "Währung",
     settings_tension_unit: "Spannungseinheit",
     settings_kg: "Kilogramm (kg)",
@@ -345,6 +434,10 @@ const translations = {
     inventory_color: "Farbe",
     inventory_length: "Länge (Meter)",
     inventory_length_short: "Länge (m)",
+    inventory_initial_length: "Anfangslänge (Meter)",
+    inventory_length_left: "Restlänge (Meter)",
+    inventory_initial_short: "Anfang (m)",
+    inventory_length_left_short: "Rest (m)",
     inventory_total_cost: "Gesamtkosten Rolle",
     inventory_cost_per_m: "Kosten / m",
     inventory_add: "Lager hinzufügen",
@@ -369,6 +462,7 @@ const translations = {
     jobs_tension: "Spannung",
     jobs_length_used: "Verwendete Länge (Meter)",
     jobs_labor_price: "Arbeitslohn",
+    jobs_labor_header: "Arbeit",
     jobs_string_price: "Saitenpreis",
     jobs_calc: "Berechnen",
     jobs_time: "Zeit (mm:ss)",
@@ -384,6 +478,21 @@ const translations = {
     footer_export_csv: "CSV exportieren",
     footer_import: "Daten importieren",
     footer_reset: "Alle Daten löschen",
+    info_title: "So funktioniert die App",
+    info_subtitle: "Einfach, privat und nur im Browser.",
+    info_step1_title: "1. Du gibst Daten ein",
+    info_step1_desc: "Kunden, Schläger, Saiten und Jobs bleiben im Browser.",
+    info_step2_title: "2. Die App berechnet Summen",
+    info_step2_desc: "Umsatz, Kosten und Zeiten werden lokal berechnet.",
+    info_step3_title: "3. Du exportierst Backups",
+    info_step3_desc: "Exportiere regelmäßig JSON oder CSV-ZIP.",
+    info_privacy_title: "Datenschutz",
+    info_privacy_desc: "Diese Seite sendet oder speichert keine Daten auf einem Server.",
+    info_export_note: "Bitte vor dem Verlassen exportieren, sonst gehen Daten verloren.",
+    info_backup_title: "Backups",
+    info_backup_desc: "Es gibt zwei Backup‑Arten:",
+    info_backup_export: "Daten exportieren: für Backup und späteres Importieren.",
+    info_backup_csv: "CSV exportieren: für Drittanbieter, nicht wieder importierbar.",
     onboarding_title: "Willkommen bei Quick Stringer",
     onboarding_subtitle: "Schnellstart für deine Bespannungen.",
     onboarding_step1_title: "1. Kunden anlegen",
@@ -420,23 +529,38 @@ const translations = {
     app_subtitle: "Gestion simple des raquettes, cordages et travaux.",
     tab_dashboard: "Tableau",
     tab_settings: "Paramètres",
+    tab_info: "Info",
     tab_customers: "Clients",
     tab_rackets: "Raquettes",
     tab_inventory: "Stock de cordage",
     tab_jobs: "Travaux de cordage",
     dashboard_today: "Aujourd’hui",
+    dashboard_8weeks: "8 dernières semaines",
     dashboard_jobs_month: "Travaux ce mois",
     dashboard_revenue_month: "Revenus ce mois",
     dashboard_inventory_items: "Articles en stock",
     dashboard_jobs_8weeks: "Travaux (8 dernières semaines)",
     dashboard_revenue_8weeks: "Revenus (8 dernières semaines)",
+    dashboard_costs_8weeks: "Coût des cordages (8 dernières semaines)",
+    dashboard_profit_8weeks: "Profit (8 dernières semaines)",
     dashboard_avg_time: "Temps moyen",
+    dashboard_stats_title: "Statistiques",
+    dashboard_stats_subtitle: "Totaux et aperçu du stock.",
+    dashboard_total_length: "Longueur totale utilisée",
+    dashboard_total_customers: "Clients au total",
+    dashboard_total_jobs: "Travaux de cordage",
+    dashboard_total_time: "Temps total",
+    dashboard_total_profit: "Profit total",
+    dashboard_greeting: "Bonjour",
+    dashboard_inventory_left: "Stock restant",
+    dashboard_no_inventory: "Pas de stock.",
     dashboard_quick_add: "Ajout rapide",
     dashboard_quick_add_desc: "Enregistrez un travail en moins d’une minute.",
     cta_add_job: "Ajouter un travail",
     settings_title: "Paramètres généraux",
     settings_subtitle: "Définissez la devise et l’unité de tension.",
     settings_language: "Langue",
+    settings_stringer_name: "Nom du cordeur",
     settings_currency: "Devise",
     settings_tension_unit: "Unité de tension",
     settings_kg: "Kilogrammes (kg)",
@@ -476,6 +600,10 @@ const translations = {
     inventory_color: "Couleur",
     inventory_length: "Longueur (mètres)",
     inventory_length_short: "Longueur (m)",
+    inventory_initial_length: "Longueur initiale (mètres)",
+    inventory_length_left: "Longueur restante (mètres)",
+    inventory_initial_short: "Initial (m)",
+    inventory_length_left_short: "Restant (m)",
     inventory_total_cost: "Coût total bobine",
     inventory_cost_per_m: "Coût / m",
     inventory_add: "Ajouter au stock",
@@ -500,6 +628,7 @@ const translations = {
     jobs_tension: "Tension",
     jobs_length_used: "Longueur utilisée (mètres)",
     jobs_labor_price: "Main-d’œuvre",
+    jobs_labor_header: "Main-d’œuvre",
     jobs_string_price: "Prix du cordage",
     jobs_calc: "Calculer",
     jobs_time: "Temps (mm:ss)",
@@ -515,6 +644,21 @@ const translations = {
     footer_export_csv: "Exporter CSV",
     footer_import: "Importer",
     footer_reset: "Tout réinitialiser",
+    info_title: "Comment l’application fonctionne",
+    info_subtitle: "Simple, privé et dans votre navigateur.",
+    info_step1_title: "1. Vous saisissez vos données",
+    info_step1_desc: "Clients, raquettes, cordages et travaux restent dans le navigateur.",
+    info_step2_title: "2. L’app calcule les totaux",
+    info_step2_desc: "Revenus, coûts et temps sont calculés localement.",
+    info_step3_title: "3. Vous exportez des sauvegardes",
+    info_step3_desc: "Exportez régulièrement en JSON ou CSV ZIP.",
+    info_privacy_title: "Confidentialité",
+    info_privacy_desc: "Cette page n’envoie ni ne stocke vos données sur un serveur.",
+    info_export_note: "Exportez toujours avant de quitter.",
+    info_backup_title: "Sauvegardes",
+    info_backup_desc: "Il existe deux types de sauvegardes :",
+    info_backup_export: "Exporter les données : sauvegarde à réimporter pour continuer.",
+    info_backup_csv: "Exporter CSV : pour apps tierces, non réimportable ici.",
     onboarding_title: "Bienvenue sur Quick Stringer",
     onboarding_subtitle: "Guide rapide pour commencer.",
     onboarding_step1_title: "1. Ajoutez des clients",
@@ -551,23 +695,38 @@ const translations = {
     app_subtitle: "Gestión simple de raquetas, cordajes y trabajos.",
     tab_dashboard: "Panel",
     tab_settings: "Ajustes",
+    tab_info: "Info",
     tab_customers: "Clientes",
     tab_rackets: "Raquetas",
     tab_inventory: "Inventario de cordaje",
     tab_jobs: "Trabajos de encordado",
     dashboard_today: "Hoy",
+    dashboard_8weeks: "Últimas 8 semanas",
     dashboard_jobs_month: "Trabajos del mes",
     dashboard_revenue_month: "Ingresos del mes",
     dashboard_inventory_items: "Artículos en inventario",
     dashboard_jobs_8weeks: "Trabajos (últimas 8 semanas)",
     dashboard_revenue_8weeks: "Ingresos (últimas 8 semanas)",
+    dashboard_costs_8weeks: "Costes de cordaje (últimas 8 semanas)",
+    dashboard_profit_8weeks: "Beneficio (últimas 8 semanas)",
     dashboard_avg_time: "Tiempo medio",
+    dashboard_stats_title: "Estadísticas",
+    dashboard_stats_subtitle: "Totales y resumen de inventario.",
+    dashboard_total_length: "Longitud total utilizada",
+    dashboard_total_customers: "Clientes totales",
+    dashboard_total_jobs: "Trabajos totales",
+    dashboard_total_time: "Tiempo total",
+    dashboard_total_profit: "Beneficio total",
+    dashboard_greeting: "Hola",
+    dashboard_inventory_left: "Inventario restante",
+    dashboard_no_inventory: "Aún no hay inventario.",
     dashboard_quick_add: "Agregar rápido",
     dashboard_quick_add_desc: "Registra un trabajo en menos de un minuto.",
     cta_add_job: "Agregar trabajo",
     settings_title: "Ajustes generales",
     settings_subtitle: "Configura moneda y unidad de tensión.",
     settings_language: "Idioma",
+    settings_stringer_name: "Nombre del encordador",
     settings_currency: "Moneda",
     settings_tension_unit: "Unidad de tensión",
     settings_kg: "Kilogramos (kg)",
@@ -607,6 +766,10 @@ const translations = {
     inventory_color: "Color",
     inventory_length: "Longitud (metros)",
     inventory_length_short: "Longitud (m)",
+    inventory_initial_length: "Longitud inicial (metros)",
+    inventory_length_left: "Longitud restante (metros)",
+    inventory_initial_short: "Inicial (m)",
+    inventory_length_left_short: "Restante (m)",
     inventory_total_cost: "Costo total bobina",
     inventory_cost_per_m: "Costo / m",
     inventory_add: "Agregar inventario",
@@ -631,6 +794,7 @@ const translations = {
     jobs_tension: "Tensión",
     jobs_length_used: "Longitud usada (metros)",
     jobs_labor_price: "Mano de obra",
+    jobs_labor_header: "Mano de obra",
     jobs_string_price: "Precio de cordaje",
     jobs_calc: "Calcular",
     jobs_time: "Tiempo (mm:ss)",
@@ -646,6 +810,21 @@ const translations = {
     footer_export_csv: "Exportar CSV",
     footer_import: "Importar",
     footer_reset: "Borrar todo",
+    info_title: "Cómo funciona la app",
+    info_subtitle: "Simple, privada y en tu navegador.",
+    info_step1_title: "1. Introduces tus datos",
+    info_step1_desc: "Clientes, raquetas, cordajes y trabajos quedan en el navegador.",
+    info_step2_title: "2. La app calcula totales",
+    info_step2_desc: "Ingresos, costes y tiempos se calculan localmente.",
+    info_step3_title: "3. Exportas copias",
+    info_step3_desc: "Exporta regularmente JSON o CSV ZIP.",
+    info_privacy_title: "Privacidad",
+    info_privacy_desc: "Esta página no envía ni guarda datos en un servidor.",
+    info_export_note: "Exporta siempre antes de salir.",
+    info_backup_title: "Copias de seguridad",
+    info_backup_desc: "Hay dos tipos de copias:",
+    info_backup_export: "Exportar datos: para respaldo e importar después.",
+    info_backup_csv: "Exportar CSV: para terceros, no se puede importar aquí.",
     onboarding_title: "Bienvenido a Quick Stringer",
     onboarding_subtitle: "Guía rápida para empezar.",
     onboarding_step1_title: "1. Agrega clientes",
@@ -715,6 +894,7 @@ function applyTranslations() {
   });
 
   updateDynamicButtonLabels();
+  renderGreeting();
 }
 
 function updateDynamicButtonLabels() {
@@ -749,6 +929,17 @@ function updateDynamicButtonLabels() {
   }
 }
 
+function renderGreeting() {
+  const greeting = $("#stringerGreeting");
+  if (!greeting) return;
+  const name = state.settings?.stringerName || "";
+  if (name) {
+    greeting.textContent = `${t("dashboard_greeting")} ${name}`;
+  } else {
+    greeting.textContent = t("dashboard_greeting");
+  }
+}
+
 function loadState() {
   const saved = localStorage.getItem(storageKey);
   if (saved) {
@@ -757,7 +948,7 @@ function loadState() {
       const migrated = migrateData(parsed);
       Object.assign(state, migrated);
       if (!state.settings) {
-        state.settings = { currency: "USD", tensionUnit: "kg", language: "en" };
+        state.settings = { currency: "USD", tensionUnit: "kg", language: "en", stringerName: "" };
       }
     } catch (err) {
       console.warn("Failed to load saved data", err);
@@ -792,7 +983,8 @@ function renderOptions() {
     select.innerHTML = `<option value="" disabled selected>${t("common_select")}</option>${customerOptions}`;
   });
 
-  updateRacketOptionsForCustomer($('input[name="customerId"]').value);
+  const currentRacketId = $('select[name="racketId"]')?.value || "";
+  updateRacketOptionsForCustomer($('input[name="customerId"]').value, currentRacketId);
 
   const customerStringCustomerSelect = $('#customerStringForm select[name="customerId"]');
   if (customerStringCustomerSelect) {
@@ -811,9 +1003,10 @@ function renderOptions() {
 
   const inventoryOptions = state.inventory
     .map((item) => {
-      const perMeter = item.length > 0 && item.costTotal ? item.costTotal / item.length : null;
+      const baseLength = Number(item.initialLength || item.lengthLeft || 0);
+      const perMeter = baseLength > 0 && item.costTotal ? item.costTotal / baseLength : null;
       const costLabel = perMeter ? ` · ${formatMoney(perMeter)}/m` : "";
-      return `<option value="${item.id}">${item.name} ${item.gauge || ""} (${item.length.toFixed(1)}m${costLabel})</option>`;
+      return `<option value="${item.id}">${item.name} ${item.gauge || ""} (${Number(item.lengthLeft || 0).toFixed(1)}m${costLabel})</option>`;
     })
     .join("");
 
@@ -830,8 +1023,10 @@ function renderOptions() {
   const customerStringList = $("#customerStringList");
   if (customerStringList) {
     const customerId = $('input[name="customerId"]').value;
-    const options = state.customerStrings
-      .filter((item) => item.customerId === customerId)
+    const pool = customerId
+      ? state.customerStrings.filter((item) => item.customerId === customerId)
+      : state.customerStrings;
+    const options = pool
       .map((item) => {
         const label = formatCustomerStringLabel(item);
         return `<option value="${label}" data-id="${item.id}"></option>`;
@@ -841,7 +1036,23 @@ function renderOptions() {
   }
 }
 
-function updateRacketOptionsForCustomer(customerId) {
+function refreshCustomerStringList() {
+  const customerStringList = $("#customerStringList");
+  if (!customerStringList) return;
+  const customerId = $('input[name="customerId"]').value;
+  const pool = customerId
+    ? state.customerStrings.filter((item) => item.customerId === customerId)
+    : state.customerStrings;
+  const options = pool
+    .map((item) => {
+      const label = formatCustomerStringLabel(item);
+      return `<option value="${label}" data-id="${item.id}"></option>`;
+    })
+    .join("");
+  customerStringList.innerHTML = options;
+}
+
+function updateRacketOptionsForCustomer(customerId, selectedId = "") {
   const rackets = customerId
     ? state.rackets.filter((racket) => racket.customerId === customerId)
     : [];
@@ -851,6 +1062,15 @@ function updateRacketOptionsForCustomer(customerId) {
   const racketSelect = $('select[name="racketId"]');
   if (!racketSelect) return;
   racketSelect.innerHTML = `<option value="" disabled selected>${t("common_select")}</option>${racketOptions}`;
+  if (selectedId && rackets.some((r) => r.id === selectedId)) {
+    racketSelect.value = selectedId;
+  } else if (selectedId) {
+    const fallback = document.createElement("option");
+    fallback.value = selectedId;
+    fallback.textContent = t("common_unknown");
+    racketSelect.appendChild(fallback);
+    racketSelect.value = selectedId;
+  }
 }
 
 function formatCustomerLabel(customer) {
@@ -861,7 +1081,7 @@ function formatCustomerLabel(customer) {
 function formatInventoryLabel(item) {
   const gauge = item.gauge ? ` ${item.gauge}` : "";
   const reel = item.reelId ? ` · ${item.reelId}` : "";
-  const length = ` (${item.length.toFixed(1)}m)`;
+  const length = ` (${Number(item.lengthLeft || 0).toFixed(1)}m)`;
   return `${item.name}${gauge}${reel}${length}`;
 }
 
@@ -924,10 +1144,27 @@ function syncCustomerStringFromInput() {
   const input = $('input[name="customerStringSearch"]');
   const hidden = $('input[name="customerStringId"]');
   if (!input || !hidden) return;
-  const match = Array.from($("#customerStringList").options || []).find(
-    (opt) => opt.value === input.value
+  hidden.value = resolveCustomerStringId(input.value);
+}
+
+function resolveCustomerStringId(value) {
+  const inputValue = (value || "").trim();
+  if (!inputValue) return "";
+  const options = Array.from($("#customerStringList").options || []);
+  const match = options.find((opt) => opt.value === inputValue);
+  if (match) return match.dataset.id || "";
+  const normalized = inputValue.toLowerCase();
+  const customerId = $('input[name="customerId"]').value;
+  const pool = state.customerStrings.filter((s) => s.customerId === customerId);
+  const byLabel = pool.filter(
+    (s) => formatCustomerStringLabel(s).toLowerCase() === normalized
   );
-  hidden.value = match ? match.dataset.id : "";
+  if (byLabel.length === 1) return byLabel[0].id;
+  const byModel = pool.filter(
+    (s) => (s.model || "").trim().toLowerCase() === normalized
+  );
+  if (byModel.length === 1) return byModel[0].id;
+  return "";
 }
 
 function maybeApplyLastTension() {
@@ -1040,14 +1277,16 @@ function renderInventory() {
   const table = $("#inventoryTable");
   table.innerHTML = state.inventory
     .map((item) => {
-      const perMeter = item.length > 0 && item.costTotal ? item.costTotal / item.length : null;
+      const baseLength = Number(item.initialLength || item.lengthLeft || 0);
+      const perMeter = baseLength > 0 && item.costTotal ? item.costTotal / baseLength : null;
       return `
         <tr>
           <td>${item.name}</td>
           <td>${item.reelId || "-"}</td>
           <td>${item.gauge || "-"}</td>
           <td>${item.color || "-"}</td>
-          <td>${item.length.toFixed(1)}</td>
+          <td>${Number(item.initialLength || 0).toFixed(1)}</td>
+          <td>${Number(item.lengthLeft || 0).toFixed(1)}</td>
           <td>${item.costTotal ? formatMoney(item.costTotal) : "-"}</td>
           <td>${perMeter ? formatMoney(perMeter) : "-"}</td>
           <td>
@@ -1063,7 +1302,8 @@ function renderInventory() {
 function renderJobs() {
   const table = $("#jobTable");
   const unit = state.settings?.tensionUnit || "kg";
-  table.innerHTML = state.jobs
+  table.innerHTML = [...state.jobs]
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
     .map((job) => {
       const customer = state.customers.find((c) => c.id === job.customerId);
       const racket = state.rackets.find((r) => r.id === job.racketId);
@@ -1076,6 +1316,7 @@ function renderJobs() {
         : stringItem
           ? `${stringItem.name} ${stringItem.gauge || ""}`
           : "-";
+      const laborAlert = job.stringSource === "shop" && Number(job.stringPrice || 0) > Number(job.laborPrice || 0);
       return `
         <tr>
           <td>${job.date}</td>
@@ -1084,6 +1325,7 @@ function renderJobs() {
           <td>${stringLabel}</td>
           <td>${job.stringSource === "customer" ? t("common_customer_string") : t("common_shop")}</td>
           <td>${job.tension ? `${job.tension} ${unit}` : "-"}</td>
+          <td><span class="${laborAlert ? "alert" : ""}">${formatMoney(job.laborPrice)}</span></td>
           <td>${formatDuration(job.durationSeconds)}</td>
           <td>${formatMoney(job.totalPrice)}</td>
           <td>
@@ -1105,13 +1347,59 @@ function renderDashboard() {
     return date >= cutoff && date <= now;
   });
 
-  const revenue = jobsLast8Weeks.reduce((sum, job) => sum + Number(job.totalPrice || 0), 0);
+  const laborRevenue = jobsLast8Weeks.reduce((sum, job) => sum + Number(job.laborPrice || 0), 0);
+  const stringCosts = jobsLast8Weeks.reduce((sum, job) => sum + Number(job.stringPrice || 0), 0);
+  const profit = laborRevenue - stringCosts;
   const totalSeconds = jobsLast8Weeks.reduce((sum, job) => sum + Number(job.durationSeconds || 0), 0);
   const avgSeconds = jobsLast8Weeks.length ? Math.round(totalSeconds / jobsLast8Weeks.length) : 0;
 
   $("#kpiJobs").textContent = jobsLast8Weeks.length;
-  $("#kpiRevenue").textContent = formatMoney(revenue);
+  $("#kpiRevenue").textContent = formatMoney(laborRevenue);
+  $("#kpiCosts").textContent = formatMoney(stringCosts);
+  $("#kpiProfit").textContent = formatMoney(profit);
   $("#kpiAvgTime").textContent = formatDuration(avgSeconds);
+
+  const totalLength = state.jobs.reduce((sum, job) => sum + Number(job.lengthUsed || 0), 0);
+  const totalTimeAll = state.jobs.reduce((sum, job) => sum + Number(job.durationSeconds || 0), 0);
+  const totalLabor = state.jobs.reduce((sum, job) => sum + Number(job.laborPrice || 0), 0);
+  const totalStringCosts = state.jobs.reduce((sum, job) => sum + Number(job.stringPrice || 0), 0);
+  const totalProfit = totalLabor - totalStringCosts;
+  $("#kpiTotalLength").textContent = `${totalLength.toFixed(1)} m`;
+  $("#kpiTotalCustomers").textContent = state.customers.length;
+  $("#kpiTotalJobs").textContent = state.jobs.length;
+  $("#kpiTotalTime").textContent = formatDurationLong(totalTimeAll);
+  $("#kpiTotalProfit").textContent = formatMoney(totalProfit);
+
+  renderInventoryBars();
+}
+
+function renderInventoryBars() {
+  const container = $("#inventoryBars");
+  if (!container) return;
+  if (!state.inventory.length) {
+    container.innerHTML = `<p class="muted">${t("dashboard_no_inventory")}</p>`;
+    return;
+  }
+
+  const rows = state.inventory.map((item) => {
+    const initial = Number(item.initialLength || 0);
+    const left = Number(item.lengthLeft || 0);
+    const percent = initial > 0 ? Math.round((left / initial) * 100) : 0;
+    const label = `${item.name}${item.reelId ? ` · ${item.reelId}` : ""}`;
+    return `
+      <div class="bar-row">
+        <div class="bar-label">
+          <span>${label}</span>
+          <span>${left.toFixed(1)} m</span>
+        </div>
+        <div class="bar-track">
+          <div class="bar-fill" style="width: ${percent}%"></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  container.innerHTML = `<div class="bar-list">${rows}</div>`;
 }
 
 function applySettings() {
@@ -1129,7 +1417,9 @@ function applySettings() {
     settingsForm.currency.value = state.settings?.currency || "USD";
     settingsForm.tensionUnit.value = unit;
     settingsForm.language.value = state.settings?.language || "en";
+    settingsForm.stringerName.value = state.settings?.stringerName || "";
   }
+  renderGreeting();
 }
 
 function renderAll() {
@@ -1235,12 +1525,15 @@ function handleInventorySubmit(event) {
   const form = event.target;
   const data = Object.fromEntries(new FormData(form));
   const editingId = data.inventoryId || null;
+  const initialLength = Number(data.initialLength || 0);
+  const lengthLeft = data.lengthLeft === "" ? initialLength : Number(data.lengthLeft || 0);
   const payload = {
     name: data.name,
     reelId: data.reelId,
     gauge: data.gauge,
     color: data.color,
-    length: Number(data.length || 0),
+    initialLength,
+    lengthLeft,
     costTotal: data.costTotal ? Number(data.costTotal) : null
   };
 
@@ -1285,7 +1578,7 @@ function handleJobSubmit(event) {
     alert(t("alert_select_string"));
     return;
   }
-  let customerStringId = data.customerStringId || null;
+  let customerStringId = resolveCustomerStringId(data.customerStringSearch);
   if (data.stringSource === "customer" && !customerStringId) {
     const model = data.customerStringModel?.trim();
     if (model) {
@@ -1308,8 +1601,9 @@ function handleJobSubmit(event) {
   let stringPrice = Number(data.stringPrice || 0);
   if (data.stringSource === "shop" && inventoryId) {
     const item = state.inventory.find((inv) => inv.id === inventoryId);
-    if (item && item.length > 0 && item.costTotal) {
-      const perMeter = item.costTotal / item.length;
+    const baseLength = Number(item?.initialLength || item?.lengthLeft || 0);
+    if (item && baseLength > 0 && item.costTotal) {
+      const perMeter = item.costTotal / baseLength;
       stringPrice = Number((perMeter * lengthUsed).toFixed(2));
     }
   }
@@ -1343,7 +1637,7 @@ function handleJobSubmit(event) {
     if (data.stringSource === "shop" && inventoryId) {
       const item = state.inventory.find((inv) => inv.id === inventoryId);
       if (item) {
-        item.length = Math.max(0, item.length - lengthUsed);
+        item.lengthLeft = Math.max(0, Number(item.lengthLeft || 0) - lengthUsed);
       }
     }
     state.jobs.push({
@@ -1373,13 +1667,13 @@ function adjustInventoryForJobChange(oldJob, newJob) {
   if (oldJob.stringSource === "shop" && oldJob.inventoryId) {
     const oldItem = state.inventory.find((inv) => inv.id === oldJob.inventoryId);
     if (oldItem) {
-      oldItem.length = oldItem.length + Number(oldJob.lengthUsed || 0);
+      oldItem.lengthLeft = Number(oldItem.lengthLeft || 0) + Number(oldJob.lengthUsed || 0);
     }
   }
   if (newJob.stringSource === "shop" && newJob.inventoryId) {
     const newItem = state.inventory.find((inv) => inv.id === newJob.inventoryId);
     if (newItem) {
-      newItem.length = Math.max(0, newItem.length - Number(newJob.lengthUsed || 0));
+      newItem.lengthLeft = Math.max(0, Number(newItem.lengthLeft || 0) - Number(newJob.lengthUsed || 0));
     }
   }
 }
@@ -1401,6 +1695,7 @@ function resetJobForm() {
   $('input[name="customerStringGauge"]').value = "";
   $('input[name="customerStringColor"]').value = "";
   $("#newCustomerStringFields").classList.add("hidden");
+  state.lastJobCustomerId = "";
   $('input[name="durationDisplay"]').value = "00:00";
   stopStringingTimer();
   setTimerDisplay(0);
@@ -1443,7 +1738,8 @@ function populateInventoryForm(item) {
   form.reelId.value = item.reelId || "";
   form.gauge.value = item.gauge || "";
   form.color.value = item.color || "";
-  form.length.value = item.length ?? 0;
+  form.initialLength.value = item.initialLength ?? item.lengthLeft ?? 0;
+  form.lengthLeft.value = item.lengthLeft ?? item.initialLength ?? 0;
   form.costTotal.value = item.costTotal ?? "";
   form.inventoryId.value = item.id;
   $("#inventoryCancelBtn").style.display = "inline-flex";
@@ -1493,9 +1789,12 @@ function populateRacketForm(racket) {
 function populateJobForm(job) {
   const form = $("#jobForm");
   stopStringingTimer();
-  renderOptions();
   form.customerId.value = job.customerId;
-  updateRacketOptionsForCustomer(job.customerId);
+  const customer = state.customers.find((c) => c.id === job.customerId);
+  form.customerSearch.value = customer ? formatCustomerLabel(customer) : "";
+  state.lastJobCustomerId = job.customerId;
+  renderOptions();
+  updateRacketOptionsForCustomer(job.customerId, job.racketId);
   form.racketId.value = job.racketId;
   form.date.value = job.date;
   form.tension.value = job.tension || "";
@@ -1511,8 +1810,6 @@ function populateJobForm(job) {
   form.durationSeconds.value = job.durationSeconds || 0;
   form.durationDisplay.value = formatDuration(job.durationSeconds || 0);
   setTimerDisplay(job.durationSeconds || 0);
-  const customer = state.customers.find((c) => c.id === job.customerId);
-  form.customerSearch.value = customer ? formatCustomerLabel(customer) : "";
   const inventoryItem = state.inventory.find((i) => i.id === job.inventoryId);
   form.inventorySearch.value = inventoryItem ? formatInventoryLabel(inventoryItem) : "";
   const customerStringItem = state.customerStrings.find((i) => i.id === job.customerStringId);
@@ -1523,6 +1820,7 @@ function populateJobForm(job) {
   const isShop = job.stringSource === "shop";
   $('input[name="inventorySearch"]').disabled = !isShop;
   $('input[name="stringPrice"]').disabled = !isShop;
+  updateRacketOptionsForCustomer(job.customerId, job.racketId);
 }
 
 function handleSettingsSubmit(event) {
@@ -1532,7 +1830,8 @@ function handleSettingsSubmit(event) {
   state.settings = {
     currency: data.currency || "USD",
     tensionUnit: data.tensionUnit || "kg",
-    language: data.language || "en"
+    language: data.language || "en",
+    stringerName: data.stringerName || ""
   };
   renderAll();
 }
@@ -1553,6 +1852,13 @@ function handleDelete(event) {
     state.inventory = state.inventory.filter((item) => item.id !== id);
   }
   if (type === "job") {
+    const job = state.jobs.find((item) => item.id === id);
+    if (job && job.stringSource === "shop" && job.inventoryId) {
+      const item = state.inventory.find((inv) => inv.id === job.inventoryId);
+      if (item) {
+        item.lengthLeft = Number(item.lengthLeft || 0) + Number(job.lengthUsed || 0);
+      }
+    }
     state.jobs = state.jobs.filter((item) => item.id !== id);
   }
   if (type === "customerString") {
@@ -1652,8 +1958,17 @@ function handleExportCsv() {
     {
       name: `quick-stringer-inventory-${timestamp}.csv`,
       rows: [
-        ["id", "name", "reelId", "gauge", "color", "length", "costTotal"],
-        ...state.inventory.map((i) => [i.id, i.name, i.reelId, i.gauge, i.color, i.length, i.costTotal])
+        ["id", "name", "reelId", "gauge", "color", "initialLength", "lengthLeft", "costTotal"],
+        ...state.inventory.map((i) => [
+          i.id,
+          i.name,
+          i.reelId,
+          i.gauge,
+          i.color,
+          i.initialLength,
+          i.lengthLeft,
+          i.costTotal
+        ])
       ]
     },
     {
@@ -1885,9 +2200,13 @@ function setupForms() {
   $('input[name="customerSearch"]').addEventListener("change", () => {
     syncCustomerFromInput();
     const customerId = $('input[name="customerId"]').value;
-    updateRacketOptionsForCustomer(customerId);
-    $('select[name="racketId"]').value = "";
+    if (customerId !== state.lastJobCustomerId) {
+      updateRacketOptionsForCustomer(customerId);
+      $('select[name="racketId"]').value = "";
+      state.lastJobCustomerId = customerId;
+    }
     renderOptions();
+    refreshCustomerStringList();
     $('input[name="customerStringSearch"]').value = "";
     $('input[name="customerStringId"]').value = "";
   });
@@ -1895,7 +2214,11 @@ function setupForms() {
   $('input[name="customerSearch"]').addEventListener("input", () => {
     syncCustomerFromInput();
     const customerId = $('input[name="customerId"]').value;
-    updateRacketOptionsForCustomer(customerId);
+    if (customerId !== state.lastJobCustomerId) {
+      updateRacketOptionsForCustomer(customerId);
+      state.lastJobCustomerId = customerId;
+    }
+    refreshCustomerStringList();
   });
 
   $('input[name="lengthUsed"]').addEventListener("input", () => {
@@ -1937,12 +2260,14 @@ function setupForms() {
 
   $("#settingsForm").addEventListener("change", (event) => {
     const isSelect = event.target.matches("select");
-    if (!isSelect) return;
+    const isInput = event.target.matches("input");
+    if (!isSelect && !isInput) return;
     const formData = Object.fromEntries(new FormData($("#settingsForm")));
     state.settings = {
       currency: formData.currency || "USD",
       tensionUnit: formData.tensionUnit || "kg",
-      language: formData.language || "en"
+      language: formData.language || "en",
+      stringerName: formData.stringerName || ""
     };
     applySettings();
     applyTranslations();
@@ -2002,8 +2327,24 @@ function migrateData(data) {
     }));
   }
 
+  if (version < 5) {
+    migrated.inventory = (migrated.inventory || []).map((item) => ({
+      ...item,
+      initialLength: item.initialLength ?? item.length ?? item.lengthLeft ?? 0,
+      lengthLeft: item.lengthLeft ?? item.length ?? item.initialLength ?? 0
+    }));
+  }
+
+  if (version < 6) {
+    migrated.settings = migrated.settings || {};
+    migrated.settings.stringerName = migrated.settings.stringerName || "";
+  }
+
+  migrated.settings = migrated.settings || {};
+  migrated.settings.stringerName = migrated.settings.stringerName || "";
+
   migrated.schemaVersion = schemaVersion;
-  migrated.settings = migrated.settings || { currency: "USD", tensionUnit: "kg", language: "en" };
+  migrated.settings = migrated.settings || { currency: "USD", tensionUnit: "kg", language: "en", stringerName: "" };
   migrated.customers = migrated.customers || [];
   migrated.rackets = migrated.rackets || [];
   migrated.inventory = migrated.inventory || [];
@@ -2016,6 +2357,16 @@ const onboarding = $("#onboarding");
 const onboardingClose = $("#onboardingClose");
 if (onboarding && onboardingClose) {
   const seen = localStorage.getItem(onboardingKey) === "seen";
+  const onboardingLanguage = $("#onboardingLanguage");
+  if (onboardingLanguage) {
+    onboardingLanguage.value = state.settings?.language || "en";
+    onboardingLanguage.addEventListener("change", (event) => {
+      state.settings.language = event.target.value || "en";
+      applySettings();
+      applyTranslations();
+      saveState();
+    });
+  }
   if (!seen) {
     onboarding.classList.remove("hidden");
   }
@@ -2029,8 +2380,9 @@ function calculateStringPrice() {
   const inventoryId = $('input[name="inventoryId"]').value;
   const lengthUsed = Number($('input[name="lengthUsed"]').value || 0);
   const item = state.inventory.find((inv) => inv.id === inventoryId);
-  if (!item || item.length <= 0 || !item.costTotal) return;
-  const perMeter = item.costTotal / item.length;
+  const baseLength = Number(item?.initialLength || item?.lengthLeft || 0);
+  if (!item || baseLength <= 0 || !item.costTotal) return;
+  const perMeter = item.costTotal / baseLength;
   $('input[name="stringPrice"]').value = (perMeter * lengthUsed).toFixed(2);
 }
 
@@ -2069,6 +2421,14 @@ function formatDuration(seconds) {
   const mins = Math.floor(total / 60);
   const secs = total % 60;
   return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+}
+
+function formatDurationLong(seconds) {
+  const total = Number(seconds || 0);
+  const days = Math.floor(total / 86400);
+  const hours = Math.floor((total % 86400) / 3600);
+  if (days > 0) return `${days}d ${hours}h`;
+  return `${hours}h`;
 }
 
 function setTimerDisplay(seconds) {

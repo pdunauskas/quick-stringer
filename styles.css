@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 :root {
   --bg: #0f172a;
@@ -28,6 +28,7 @@ body {
     radial-gradient(circle at 20% 20%, rgba(249, 115, 22, 0.2), transparent 45%),
     linear-gradient(180deg, var(--bg), var(--bg-soft));
   min-height: 100vh;
+  touch-action: pan-y;
 }
 
 .site-header {
@@ -79,6 +80,7 @@ p {
   display: flex;
   gap: 12px;
   flex-wrap: wrap;
+  touch-action: pan-x;
 }
 
 .tab {
@@ -128,6 +130,18 @@ main {
   border-radius: 24px;
   padding: 22px;
   box-shadow: var(--shadow);
+}
+
+.stats-grid {
+  margin-bottom: 24px;
+}
+
+.stats-card {
+  margin-top: 16px;
+}
+
+.panel-header {
+  margin-top: 24px;
 }
 
 .kpis {
@@ -265,6 +279,15 @@ button {
   cursor: pointer;
 }
 
+.alert {
+  color: #fff;
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  padding: 6px 10px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
 .ghost {
   background: transparent;
   border: 1px solid rgba(148, 163, 184, 0.35);
@@ -329,6 +352,58 @@ button {
   color: var(--muted);
 }
 
+.diagram {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+  font-family: "IBM Plex Mono", "SFMono-Regular", monospace;
+  color: var(--ink);
+  white-space: pre-wrap;
+}
+
+.backup-list {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.backup-list li {
+  margin: 6px 0;
+}
+
+.bar-list {
+  display: grid;
+  gap: 12px;
+}
+
+.bar-row {
+  display: grid;
+  gap: 8px;
+}
+
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.bar-track {
+  position: relative;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.2);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-3), var(--accent-2));
+  width: 0%;
+}
+
 footer {
   padding: 20px 6vw 40px;
   border-top: 1px solid var(--border);
@@ -343,8 +418,11 @@ footer {
   position: fixed;
   inset: 0;
   background: rgba(6, 10, 22, 0.78);
-  display: grid;
-  place-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 0;
+  overflow-y: auto;
   z-index: 40;
   backdrop-filter: blur(10px);
 }
@@ -364,6 +442,10 @@ footer {
 
 .onboarding-header h2 {
   margin-bottom: 6px;
+}
+
+.onboarding-lang {
+  margin: 16px 0 8px;
 }
 
 .onboarding-steps {
@@ -415,5 +497,80 @@ footer {
 
   .inline-input .small {
     width: 100%;
+  }
+}
+
+@media (max-width: 900px) {
+  .site-header {
+    padding: 20px 5vw 12px;
+  }
+
+  .brand {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    flex: 0 0 auto;
+    padding: 10px 14px;
+  }
+
+  main {
+    padding: 18px 5vw 70px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .job-actions {
+    flex-wrap: wrap;
+  }
+
+  .job-actions .primary,
+  .job-actions .ghost {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .timer {
+    width: 100%;
+  }
+
+  .cta {
+    padding: 14px 18px;
+  }
+
+  input,
+  select,
+  textarea,
+  .tab,
+  .primary,
+  .ghost,
+  .danger {
+    min-height: 44px;
+  }
+
+  .table-wrap th,
+  .table-wrap td {
+    padding: 12px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .onboarding-card {
+    padding: 20px;
+    border-radius: 20px;
   }
 }

@@ -27,6 +27,7 @@
     <nav class="tabs" role="tablist">
       <button class="tab active" data-tab="dashboard" data-i18n="tab_dashboard">Dashboard</button>
       <button class="tab" data-tab="settings" data-i18n="tab_settings">Settings</button>
+      <button class="tab" data-tab="info" data-i18n="tab_info">Info</button>
       <button class="tab" data-tab="customers" data-i18n="tab_customers">Customers</button>
       <button class="tab" data-tab="rackets" data-i18n="tab_rackets">Rackets</button>
       <button class="tab" data-tab="inventory" data-i18n="tab_inventory">String Inventory</button>
@@ -36,9 +37,12 @@
 
   <main>
     <section class="panel active" id="dashboard">
+      <div class="panel-header">
+        <h2 id="stringerGreeting"></h2>
+      </div>
       <div class="grid">
         <div class="card">
-          <h2 data-i18n="dashboard_today">Today</h2>
+          <h2 data-i18n="dashboard_8weeks">Past 8 Weeks</h2>
           <div class="kpis">
             <div>
               <p class="kpi-label" data-i18n="dashboard_jobs_8weeks">Jobs (Last 8 Weeks)</p>
@@ -47,6 +51,14 @@
             <div>
               <p class="kpi-label" data-i18n="dashboard_revenue_8weeks">Revenue (Last 8 Weeks)</p>
               <p class="kpi" id="kpiRevenue">$0</p>
+            </div>
+            <div>
+              <p class="kpi-label" data-i18n="dashboard_costs_8weeks">String Costs (Last 8 Weeks)</p>
+              <p class="kpi" id="kpiCosts">$0</p>
+            </div>
+            <div>
+              <p class="kpi-label" data-i18n="dashboard_profit_8weeks">Profit (Last 8 Weeks)</p>
+              <p class="kpi" id="kpiProfit">$0</p>
             </div>
             <div>
               <p class="kpi-label" data-i18n="dashboard_avg_time">Avg Stringing Time</p>
@@ -59,6 +71,38 @@
           <p class="muted" data-i18n="dashboard_quick_add_desc">Log a stringing job in under a minute.</p>
           <button class="cta" data-tab-target="jobs" data-i18n="cta_add_job">Add Job</button>
         </div>
+      </div>
+
+      <div class="panel-header">
+        <h2 data-i18n="dashboard_stats_title">Statistics</h2>
+        <p data-i18n="dashboard_stats_subtitle">Totals and inventory overview.</p>
+      </div>
+      <div class="grid stats-grid">
+        <div class="card">
+          <p class="kpi-label" data-i18n="dashboard_total_length">Total String Length Used</p>
+          <p class="kpi" id="kpiTotalLength">0 m</p>
+        </div>
+        <div class="card">
+          <p class="kpi-label" data-i18n="dashboard_total_customers">Total Customers</p>
+          <p class="kpi" id="kpiTotalCustomers">0</p>
+        </div>
+        <div class="card">
+          <p class="kpi-label" data-i18n="dashboard_total_jobs">Total Stringing Jobs</p>
+          <p class="kpi" id="kpiTotalJobs">0</p>
+        </div>
+        <div class="card">
+          <p class="kpi-label" data-i18n="dashboard_total_time">Total Time Spent</p>
+          <p class="kpi" id="kpiTotalTime">00:00</p>
+        </div>
+        <div class="card">
+          <p class="kpi-label" data-i18n="dashboard_total_profit">Total Profit</p>
+          <p class="kpi" id="kpiTotalProfit">$0</p>
+        </div>
+      </div>
+
+      <div class="card stats-card">
+        <h3 data-i18n="dashboard_inventory_left">Inventory Left</h3>
+        <div id="inventoryBars"></div>
       </div>
     </section>
 
@@ -79,6 +123,10 @@
           </select>
         </label>
         <label>
+          <span data-i18n="settings_stringer_name">Stringer Name</span>
+          <input type="text" name="stringerName" />
+        </label>
+        <label>
           <span data-i18n="settings_currency">Currency</span>
           <select name="currency">
             <option value="USD">USD ($)</option>
@@ -97,6 +145,40 @@
         </label>
         <button type="submit" class="primary" data-i18n="settings_save">Save Settings</button>
       </form>
+    </section>
+
+    <section class="panel" id="info">
+      <div class="panel-header">
+        <h2 data-i18n="info_title">How This App Works</h2>
+        <p data-i18n="info_subtitle">Simple, private, and fully in your browser.</p>
+      </div>
+      <div class="grid">
+        <div class="card">
+          <h3 data-i18n="info_step1_title">1. You enter your data</h3>
+          <p data-i18n="info_step1_desc">Customers, rackets, strings, and jobs are saved only in your browser.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="info_step2_title">2. The app calculates totals</h3>
+          <p data-i18n="info_step2_desc">Revenue, costs, and timing are calculated locally on your device.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="info_step3_title">3. You export backups</h3>
+          <p data-i18n="info_step3_desc">Export JSON or CSV ZIP regularly so you never lose data.</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3 data-i18n="info_privacy_title">Data Privacy</h3>
+        <p data-i18n="info_privacy_desc">This webpage does not send or store your data on a server. Everything stays in your browser.</p>
+        <p data-i18n="info_export_note">Always export your data before exiting the page, otherwise you may lose it.</p>
+      </div>
+      <div class="card">
+        <h3 data-i18n="info_backup_title">Backups</h3>
+        <p data-i18n="info_backup_desc">There are two types of backups:</p>
+        <ol class="backup-list">
+          <li data-i18n="info_backup_export">Export Data: use this to back up and later upload to continue working.</li>
+          <li data-i18n="info_backup_csv">Export CSV: extra export for third‑party apps, not importable back here.</li>
+        </ol>
+      </div>
     </section>
 
     <section class="panel" id="customers">
@@ -258,8 +340,12 @@
           <input type="text" name="color" />
         </label>
         <label>
-          <span data-i18n="inventory_length">Length (meters)</span>
-          <input type="number" name="length" min="0" step="0.1" required />
+          <span data-i18n="inventory_initial_length">Initial Length (meters)</span>
+          <input type="number" name="initialLength" min="0" step="0.1" required />
+        </label>
+        <label>
+          <span data-i18n="inventory_length_left">Length Left (meters)</span>
+          <input type="number" name="lengthLeft" min="0" step="0.1" required />
         </label>
         <label>
           <span data-i18n="inventory_total_cost">Total Spool Cost</span>
@@ -279,7 +365,8 @@
               <th data-i18n="inventory_reel_id">Reel ID</th>
               <th data-i18n="inventory_gauge">Gauge</th>
               <th data-i18n="inventory_color">Color</th>
-              <th data-i18n="inventory_length_short">Length (m)</th>
+              <th data-i18n="inventory_initial_short">Initial (m)</th>
+              <th data-i18n="inventory_length_left_short">Length Left (m)</th>
               <th data-i18n="inventory_total_cost">Total Cost</th>
               <th data-i18n="inventory_cost_per_m">Cost / m</th>
               <th></th>
@@ -388,6 +475,7 @@
               <th data-i18n="jobs_string_used">String</th>
               <th data-i18n="jobs_source">Source</th>
               <th data-i18n="jobs_tension_header">Tension</th>
+              <th data-i18n="jobs_labor_header">Labor</th>
               <th data-i18n="jobs_time_header">Time</th>
               <th data-i18n="jobs_price">Price</th>
               <th></th>
@@ -413,6 +501,18 @@
       <div class="onboarding-header">
         <h2 data-i18n="onboarding_title">Welcome to Quick Stringer</h2>
         <p data-i18n="onboarding_subtitle">Here’s the fastest way to start tracking your stringing work.</p>
+      </div>
+      <div class="onboarding-lang">
+        <label>
+          <span data-i18n="settings_language">Language</span>
+          <select id="onboardingLanguage">
+            <option value="en">🇺🇸 English</option>
+            <option value="lt">🇱🇹 Lithuanian</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="fr">🇫🇷 France</option>
+            <option value="es">🇪🇸 Spain</option>
+          </select>
+        </label>
       </div>
       <div class="onboarding-steps">
         <div class="step">
