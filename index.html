@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Stringer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+      <div class="brand">
+      <div class="logo" aria-label="Quick Stringer logo">
+        <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
+          <circle cx="30" cy="32" r="16"></circle>
+          <circle cx="30" cy="32" r="6" fill="var(--accent-2)"></circle>
+          <rect x="40" y="18" width="12" height="28" rx="6"></rect>
+          <path d="M18 22c6-6 14-9 24-9"></path>
+          <path d="M16 30c7-6 16-9 26-9"></path>
+          <path d="M16 38c8-6 17-8 26-7"></path>
+        </svg>
+      </div>
+      <div>
+        <h1 data-i18n="app_title">Quick Stringer</h1>
+        <p data-i18n="app_subtitle">Simple shop manager for rackets, strings, and jobs.</p>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="dashboard" data-i18n="tab_dashboard">Dashboard</button>
+      <button class="tab" data-tab="settings" data-i18n="tab_settings">Settings</button>
+      <button class="tab" data-tab="customers" data-i18n="tab_customers">Customers</button>
+      <button class="tab" data-tab="rackets" data-i18n="tab_rackets">Rackets</button>
+      <button class="tab" data-tab="inventory" data-i18n="tab_inventory">String Inventory</button>
+      <button class="tab" data-tab="jobs" data-i18n="tab_jobs">Stringing Jobs</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="panel active" id="dashboard">
+      <div class="grid">
+        <div class="card">
+          <h2 data-i18n="dashboard_today">Today</h2>
+          <div class="kpis">
+            <div>
+              <p class="kpi-label" data-i18n="dashboard_jobs_8weeks">Jobs (Last 8 Weeks)</p>
+              <p class="kpi" id="kpiJobs">0</p>
+            </div>
+            <div>
+              <p class="kpi-label" data-i18n="dashboard_revenue_8weeks">Revenue (Last 8 Weeks)</p>
+              <p class="kpi" id="kpiRevenue">$0</p>
+            </div>
+            <div>
+              <p class="kpi-label" data-i18n="dashboard_avg_time">Avg Stringing Time</p>
+              <p class="kpi" id="kpiAvgTime">00:00</p>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h2 data-i18n="dashboard_quick_add">Quick Add Job</h2>
+          <p class="muted" data-i18n="dashboard_quick_add_desc">Log a stringing job in under a minute.</p>
+          <button class="cta" data-tab-target="jobs" data-i18n="cta_add_job">Add Job</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="settings">
+      <div class="panel-header">
+        <h2 data-i18n="settings_title">General Settings</h2>
+        <p data-i18n="settings_subtitle">Customize your defaults for currency and tension units.</p>
+      </div>
+      <form id="settingsForm" class="form-grid">
+        <label>
+          <span data-i18n="settings_language">Language</span>
+          <select name="language">
+            <option value="en">🇺🇸 English</option>
+            <option value="lt">🇱🇹 Lithuanian</option>
+            <option value="de">🇩🇪 German</option>
+            <option value="fr">🇫🇷 France</option>
+            <option value="es">🇪🇸 Spain</option>
+          </select>
+        </label>
+        <label>
+          <span data-i18n="settings_currency">Currency</span>
+          <select name="currency">
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="CAD">CAD ($)</option>
+            <option value="AUD">AUD ($)</option>
+          </select>
+        </label>
+        <label>
+          <span data-i18n="settings_tension_unit">Tension Unit</span>
+          <select name="tensionUnit">
+            <option value="kg" data-i18n="settings_kg">Kilograms (kg)</option>
+            <option value="lb" data-i18n="settings_lb">Pounds (lb)</option>
+          </select>
+        </label>
+        <button type="submit" class="primary" data-i18n="settings_save">Save Settings</button>
+      </form>
+    </section>
+
+    <section class="panel" id="customers">
+      <div class="panel-header">
+        <h2 data-i18n="customers_title">Customers</h2>
+        <p data-i18n="customers_subtitle">Store customer details and notes.</p>
+      </div>
+      <form id="customerForm" class="form-grid">
+        <input type="hidden" name="customerId" />
+        <label>
+          <span data-i18n="customers_name">Full Name</span>
+          <input type="text" name="name" required />
+        </label>
+        <label>
+          <span data-i18n="customers_phone">Phone</span>
+          <input type="tel" name="phone" />
+        </label>
+        <label>
+          <span data-i18n="customers_email">Email</span>
+          <input type="email" name="email" />
+        </label>
+        <label class="full">
+          <span data-i18n="customers_notes">Notes</span>
+          <textarea name="notes" rows="2"></textarea>
+        </label>
+        <div class="job-actions full">
+          <button type="submit" class="primary" id="customerSubmitBtn" data-i18n="customers_add">Add Customer</button>
+          <button type="button" class="ghost" id="customerCancelBtn" data-i18n="common_cancel">Cancel Edit</button>
+        </div>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="customers_name">Name</th>
+              <th data-i18n="customers_phone">Phone</th>
+              <th data-i18n="customers_email">Email</th>
+              <th data-i18n="customers_notes">Notes</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="customerTable"></tbody>
+        </table>
+      </div>
+
+      <div class="panel-header">
+        <h3 data-i18n="customer_strings_title">Customer Strings</h3>
+        <p data-i18n="customer_strings_subtitle">Register strings that customers bring in.</p>
+      </div>
+      <form id="customerStringForm" class="form-grid">
+        <input type="hidden" name="customerStringId" />
+        <label>
+          <span data-i18n="common_customer">Customer</span>
+          <select name="customerId" required></select>
+        </label>
+        <label>
+          <span data-i18n="customer_string_model">String Model</span>
+          <input type="text" name="model" required />
+        </label>
+        <label>
+          <span data-i18n="customer_string_gauge">Gauge</span>
+          <input type="text" name="gauge" placeholder="1.25" />
+        </label>
+        <label>
+          <span data-i18n="customer_string_color">Color</span>
+          <input type="text" name="color" />
+        </label>
+        <div class="job-actions full">
+          <button type="submit" class="primary" id="customerStringSubmitBtn" data-i18n="customer_string_add">Add String</button>
+          <button type="button" class="ghost" id="customerStringCancelBtn" data-i18n="common_cancel">Cancel Edit</button>
+        </div>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="common_customer">Customer</th>
+              <th data-i18n="customer_string_model">String</th>
+              <th data-i18n="customer_string_gauge">Gauge</th>
+              <th data-i18n="customer_string_color">Color</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="customerStringTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="rackets">
+      <div class="panel-header">
+        <h2 data-i18n="rackets_title">Rackets</h2>
+        <p data-i18n="rackets_subtitle">Track rackets and link them to customers.</p>
+      </div>
+      <form id="racketForm" class="form-grid">
+        <input type="hidden" name="racketId" />
+        <label>
+          <span data-i18n="common_customer">Customer</span>
+          <select name="customerId" required></select>
+        </label>
+        <label>
+          <span data-i18n="rackets_model">Brand / Model</span>
+          <input type="text" name="model" required />
+        </label>
+        <label>
+          <span data-i18n="rackets_head">Head Size</span>
+          <input type="text" name="headSize" placeholder="100 sq in" />
+        </label>
+        <label>
+          <span data-i18n="rackets_pattern">Pattern</span>
+          <input type="text" name="pattern" placeholder="16x19" />
+        </label>
+        <label class="full">
+          <span data-i18n="rackets_notes">Notes</span>
+          <textarea name="notes" rows="2"></textarea>
+        </label>
+        <div class="job-actions full">
+          <button type="submit" class="primary" id="racketSubmitBtn" data-i18n="rackets_add">Add Racket</button>
+          <button type="button" class="ghost" id="racketCancelBtn" data-i18n="common_cancel">Cancel Edit</button>
+        </div>
+      </form>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="common_customer">Customer</th>
+              <th data-i18n="rackets_model_short">Model</th>
+              <th data-i18n="rackets_head_short">Head</th>
+              <th data-i18n="rackets_pattern">Pattern</th>
+              <th data-i18n="rackets_notes">Notes</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="racketTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="inventory">
+      <div class="panel-header">
+        <h2 data-i18n="inventory_title">String Inventory</h2>
+        <p data-i18n="inventory_subtitle">Track your string reels, sets, and remaining length.</p>
+      </div>
+      <form id="inventoryForm" class="form-grid">
+        <input type="hidden" name="inventoryId" />
+        <label>
+          <span data-i18n="inventory_name">Brand / String</span>
+          <input type="text" name="name" required />
+        </label>
+        <label>
+          <span data-i18n="inventory_reel_id">Reel ID</span>
+          <input type="text" name="reelId" placeholder="HG-01" />
+        </label>
+        <label>
+          <span data-i18n="inventory_gauge">Gauge</span>
+          <input type="text" name="gauge" placeholder="1.25" />
+        </label>
+        <label>
+          <span data-i18n="inventory_color">Color</span>
+          <input type="text" name="color" />
+        </label>
+        <label>
+          <span data-i18n="inventory_length">Length (meters)</span>
+          <input type="number" name="length" min="0" step="0.1" required />
+        </label>
+        <label>
+          <span data-i18n="inventory_total_cost">Total Spool Cost</span>
+          <input type="number" name="costTotal" min="0" step="0.01" />
+        </label>
+        <div class="job-actions full">
+          <button type="submit" class="primary" id="inventorySubmitBtn" data-i18n="inventory_add">Add Inventory</button>
+          <button type="button" class="ghost" id="inventoryCancelBtn" data-i18n="common_cancel">Cancel Edit</button>
+        </div>
+      </form>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="inventory_string">String</th>
+              <th data-i18n="inventory_reel_id">Reel ID</th>
+              <th data-i18n="inventory_gauge">Gauge</th>
+              <th data-i18n="inventory_color">Color</th>
+              <th data-i18n="inventory_length_short">Length (m)</th>
+              <th data-i18n="inventory_total_cost">Total Cost</th>
+              <th data-i18n="inventory_cost_per_m">Cost / m</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTable"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel" id="jobs">
+      <div class="panel-header">
+        <h2 data-i18n="jobs_title">Stringing Jobs</h2>
+        <p data-i18n="jobs_subtitle">Log each stringing job and prices charged.</p>
+      </div>
+      <form id="jobForm" class="form-grid">
+        <input type="hidden" name="jobId" />
+        <input type="hidden" name="durationSeconds" />
+        <input type="hidden" name="customerId" />
+        <input type="hidden" name="inventoryId" />
+        <input type="hidden" name="customerStringId" />
+        <label>
+          <span data-i18n="common_customer">Customer</span>
+          <input type="text" name="customerSearch" list="customerList" data-i18n-placeholder="jobs_search_customer" placeholder="Search customer..." />
+          <datalist id="customerList"></datalist>
+        </label>
+        <label>
+          <span data-i18n="jobs_racket">Racket</span>
+          <select name="racketId" required></select>
+        </label>
+        <label>
+          <span data-i18n="jobs_string_source">String Source</span>
+          <select name="stringSource" required>
+            <option value="shop" data-i18n="jobs_string_source_shop">My String</option>
+            <option value="customer" data-i18n="jobs_string_source_customer">Customer String</option>
+          </select>
+        </label>
+        <label id="inventoryStringLabel">
+          <span data-i18n="jobs_string_used">String Used</span>
+          <input type="text" name="inventorySearch" list="inventoryList" data-i18n-placeholder="jobs_search_string" placeholder="Search string..." />
+          <datalist id="inventoryList"></datalist>
+        </label>
+        <label id="customerStringLabel">
+          <span data-i18n="jobs_customer_string">Customer String</span>
+          <input type="text" name="customerStringSearch" list="customerStringList" data-i18n-placeholder="jobs_search_customer_string" placeholder="Search customer string..." />
+          <datalist id="customerStringList"></datalist>
+        </label>
+        <label id="newCustomerStringLabel">
+          <span data-i18n="jobs_customer_string_new">New Customer String</span>
+          <div class="stacked-inputs hidden" id="newCustomerStringFields">
+            <input type="text" name="customerStringModel" data-i18n-placeholder="jobs_customer_string_model" placeholder="String model" />
+            <input type="text" name="customerStringGauge" data-i18n-placeholder="jobs_customer_string_gauge" placeholder="Gauge" />
+            <input type="text" name="customerStringColor" data-i18n-placeholder="jobs_customer_string_color" placeholder="Color" />
+          </div>
+          <button type="button" class="ghost small" id="newCustomerStringBtn" data-i18n="jobs_customer_string_new_btn">New</button>
+        </label>
+        <label>
+          <span data-i18n="jobs_date">Date</span>
+          <input type="date" name="date" required />
+        </label>
+        <label>
+          <span class="label-inline">
+            <span data-i18n="jobs_tension">Tension</span>
+            (<span id="tensionUnitLabel">kg</span>)
+          </span>
+          <input type="text" name="tension" placeholder="24/23" />
+        </label>
+        <label>
+          <span data-i18n="jobs_length_used">Length Used (meters)</span>
+          <input type="number" name="lengthUsed" min="0" step="0.1" value="12.2" />
+        </label>
+        <label>
+          <span data-i18n="jobs_labor_price">Labor Price</span>
+          <input type="number" name="laborPrice" min="0" step="0.01" required />
+        </label>
+        <label>
+          <span data-i18n="jobs_string_price">String Price</span>
+          <div class="inline-input">
+            <input type="number" name="stringPrice" min="0" step="0.01" />
+            <button type="button" class="ghost small" id="calcStringPriceBtn" data-i18n="jobs_calc">Calculate</button>
+          </div>
+        </label>
+        <label>
+          <span data-i18n="jobs_time">Time (mm:ss)</span>
+          <input type="text" name="durationDisplay" placeholder="00:00" />
+        </label>
+        <label class="full">
+          <span data-i18n="common_notes">Notes</span>
+          <textarea name="notes" rows="2"></textarea>
+        </label>
+        <div class="job-actions full">
+          <button type="button" class="ghost" id="startStringingBtn" data-i18n="jobs_start">Start Stringing</button>
+          <div class="timer" id="stringingTimer">00:00</div>
+          <button type="submit" class="primary" id="jobSubmitBtn" data-i18n="jobs_finish">Finish & Save</button>
+          <button type="button" class="ghost" id="jobCancelBtn" data-i18n="common_cancel">Cancel Edit</button>
+        </div>
+      </form>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="jobs_date">Date</th>
+              <th data-i18n="common_customer">Customer</th>
+              <th data-i18n="jobs_racket">Racket</th>
+              <th data-i18n="jobs_string_used">String</th>
+              <th data-i18n="jobs_source">Source</th>
+              <th data-i18n="jobs_tension_header">Tension</th>
+              <th data-i18n="jobs_time_header">Time</th>
+              <th data-i18n="jobs_price">Price</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="jobTable"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p data-i18n="footer_saved">Data is saved locally in your browser.</p>
+    <button id="exportBtn" data-i18n="footer_export">Export Data</button>
+    <button id="exportCsvBtn" data-i18n="footer_export_csv">Export CSV</button>
+    <button id="importBtn" data-i18n="footer_import">Import Data</button>
+    <input type="file" id="importFile" accept="application/json" hidden />
+    <button id="resetBtn" class="danger" data-i18n="footer_reset">Reset All Data</button>
+  </footer>
+
+  <div id="onboarding" class="onboarding hidden">
+    <div class="onboarding-card">
+      <div class="onboarding-header">
+        <h2 data-i18n="onboarding_title">Welcome to Quick Stringer</h2>
+        <p data-i18n="onboarding_subtitle">Here’s the fastest way to start tracking your stringing work.</p>
+      </div>
+      <div class="onboarding-steps">
+        <div class="step">
+          <h3 data-i18n="onboarding_step1_title">1. Add Customers</h3>
+          <p data-i18n="onboarding_step1_desc">Go to the Customers tab and store contact details.</p>
+        </div>
+        <div class="step">
+          <h3 data-i18n="onboarding_step2_title">2. Add Rackets</h3>
+          <p data-i18n="onboarding_step2_desc">Create rackets linked to each customer.</p>
+        </div>
+        <div class="step">
+          <h3 data-i18n="onboarding_step3_title">3. Add String Inventory</h3>
+          <p data-i18n="onboarding_step3_desc">Enter your spool length and total cost so pricing auto-calculates.</p>
+        </div>
+        <div class="step">
+          <h3 data-i18n="onboarding_step4_title">4. Log Stringing Jobs</h3>
+          <p data-i18n="onboarding_step4_desc">Select a customer, their racket, and the string used. The price button will calculate for you.</p>
+        </div>
+        <div class="step">
+          <h3 data-i18n="onboarding_step5_title">5. Export Backups</h3>
+          <p data-i18n="onboarding_step5_desc">Use Export in the footer to save a backup file anytime.</p>
+        </div>
+        <div class="step">
+          <h3 data-i18n="onboarding_note_title">Important Note</h3>
+          <p data-i18n="onboarding_note_desc">Always export your data before exiting the page so you never lose a backup.</p>
+        </div>
+      </div>
+      <div class="onboarding-actions">
+        <button class="primary" id="onboardingClose" data-i18n="onboarding_close">Got it, let’s start</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
