@@ -9,6 +9,7 @@
   --accent: #7da94f;
   --accent-2: #b8d36a;
   --accent-3: #4f7d2a;
+  --logo-stroke: #d1d5db;
   --ink: #f8fafc;
   --muted: #94a3b8;
   --border: rgba(148, 163, 184, 0.25);
@@ -49,20 +50,33 @@ body {
 }
 
 .logo {
-  width: 68px;
-  height: 68px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  color: #0b1224;
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: transparent;
+  color: var(--logo-stroke);
   display: grid;
   place-items: center;
-  box-shadow: 0 12px 24px rgba(56, 189, 248, 0.35);
+  box-shadow: none;
 }
 
 .logo svg {
-  width: 44px;
-  height: 44px;
-  fill: #0b1224;
+  width: 68px;
+  height: 68px;
+  fill: none;
+  stroke: var(--logo-stroke);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.6;
+}
+
+.logo .logo-grid {
+  stroke-width: 2.2;
+}
+
+.logo .logo-accent {
+  stroke: var(--accent);
+  stroke-width: 3.4;
 }
 
 h1,

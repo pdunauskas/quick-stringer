@@ -8,15 +8,22 @@
 </head>
 <body>
   <header class="site-header">
-      <div class="brand">
+    <div class="brand">
       <div class="logo" aria-label="Quick Stringer logo">
         <svg viewBox="0 0 64 64" role="img" aria-hidden="true">
-          <circle cx="30" cy="32" r="16"></circle>
-          <circle cx="30" cy="32" r="6" fill="var(--accent-2)"></circle>
-          <rect x="40" y="18" width="12" height="28" rx="6"></rect>
-          <path d="M18 22c6-6 14-9 24-9"></path>
-          <path d="M16 30c7-6 16-9 26-9"></path>
-          <path d="M16 38c8-6 17-8 26-7"></path>
+          <rect class="logo-frame" x="4" y="4" width="56" height="56" rx="12"></rect>
+          <g class="logo-grid">
+            <line x1="22" y1="16" x2="22" y2="48"></line>
+            <line x1="32" y1="16" x2="32" y2="48"></line>
+            <line x1="42" y1="16" x2="42" y2="48"></line>
+            <line x1="16" y1="22" x2="48" y2="22"></line>
+            <line x1="16" y1="32" x2="48" y2="32"></line>
+            <line x1="16" y1="42" x2="48" y2="42"></line>
+          </g>
+          <g class="logo-accent">
+            <line x1="32" y1="26" x2="32" y2="38"></line>
+            <line x1="26" y1="32" x2="38" y2="32"></line>
+          </g>
         </svg>
       </div>
       <div>
