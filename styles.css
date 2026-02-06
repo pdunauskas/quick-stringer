@@ -158,6 +158,16 @@ main {
   margin-top: 24px;
 }
 
+.table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.table-toolbar input[type="search"] {
+  width: min(360px, 100%);
+}
+
 .kpis {
   display: flex;
   gap: 24px;
@@ -235,6 +245,41 @@ textarea {
   cursor: pointer;
   align-self: end;
   box-shadow: 0 12px 24px rgba(56, 189, 248, 0.35);
+}
+
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sort-indicator {
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.25;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.sort-btn.active .sort-indicator {
+  opacity: 0.85;
+}
+
+.sort-btn.asc .sort-indicator {
+  transform: rotate(-135deg);
+}
+
+.sort-btn.desc .sort-indicator {
+  transform: rotate(45deg);
 }
 
 .cta {

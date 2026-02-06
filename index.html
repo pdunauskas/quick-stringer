@@ -472,19 +472,74 @@
         </div>
       </form>
 
+      <div class="table-toolbar">
+        <input
+          type="search"
+          id="jobSearchInput"
+          data-i18n-placeholder="jobs_table_search"
+          placeholder="Search customer or string..."
+          aria-label="Search jobs"
+        />
+      </div>
+
       <div class="table-wrap">
-        <table>
+        <table id="jobTableList">
           <thead>
             <tr>
-              <th data-i18n="jobs_date">Date</th>
-              <th data-i18n="common_customer">Customer</th>
-              <th data-i18n="jobs_racket">Racket</th>
-              <th data-i18n="jobs_string_used">String</th>
-              <th data-i18n="jobs_source">Source</th>
-              <th data-i18n="jobs_tension_header">Tension</th>
-              <th data-i18n="jobs_labor_header">Labor</th>
-              <th data-i18n="jobs_time_header">Time</th>
-              <th data-i18n="jobs_price">Price</th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="date">
+                  <span data-i18n="jobs_date">Date</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="customer">
+                  <span data-i18n="common_customer">Customer</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="racket">
+                  <span data-i18n="jobs_racket">Racket</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="string">
+                  <span data-i18n="jobs_string_used">String</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="source">
+                  <span data-i18n="jobs_source">Source</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="tension">
+                  <span data-i18n="jobs_tension_header">Tension</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="labor">
+                  <span data-i18n="jobs_labor_header">Labor</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="time">
+                  <span data-i18n="jobs_time_header">Time</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
+              <th>
+                <button type="button" class="sort-btn" data-sort="price">
+                  <span data-i18n="jobs_price">Price</span>
+                  <span class="sort-indicator" aria-hidden="true"></span>
+                </button>
+              </th>
               <th></th>
             </tr>
           </thead>

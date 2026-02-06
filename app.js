@@ -22,6 +22,8 @@ const $$ = (selector) => document.querySelectorAll(selector);
 
 let timerInterval = null;
 let timerStart = null;
+let jobSearchQuery = "";
+const jobSortState = { key: "date", direction: "desc" };
 
 const translations = {
   en: {
@@ -113,6 +115,7 @@ const translations = {
     jobs_title: "Stringing Jobs",
     jobs_subtitle: "Log each stringing job and prices charged.",
     jobs_search_customer: "Search customer...",
+    jobs_table_search: "Search customer or string...",
     jobs_search_string: "Search string...",
     jobs_search_customer_string: "Search customer string...",
     jobs_customer_string: "Customer String",
@@ -279,6 +282,7 @@ const translations = {
     jobs_title: "Stygavimo darbai",
     jobs_subtitle: "Registruokite darbus ir kainas.",
     jobs_search_customer: "Ieškoti kliento...",
+    jobs_table_search: "Ieškoti kliento ar stygos...",
     jobs_search_string: "Ieškoti stygos...",
     jobs_search_customer_string: "Ieškoti kliento stygos...",
     jobs_customer_string: "Kliento styga",
@@ -445,6 +449,7 @@ const translations = {
     jobs_title: "Bespannungen",
     jobs_subtitle: "Jobs und Preise erfassen.",
     jobs_search_customer: "Kunden suchen...",
+    jobs_table_search: "Kunde oder Saite suchen...",
     jobs_search_string: "Saite suchen...",
     jobs_search_customer_string: "Kundensaite suchen...",
     jobs_customer_string: "Kundensaite",
@@ -611,6 +616,7 @@ const translations = {
     jobs_title: "Travaux de cordage",
     jobs_subtitle: "Enregistrez les travaux et prix.",
     jobs_search_customer: "Rechercher un client...",
+    jobs_table_search: "Rechercher client ou cordage...",
     jobs_search_string: "Rechercher un cordage...",
     jobs_search_customer_string: "Rechercher un cordage client...",
     jobs_customer_string: "Cordage client",
@@ -777,6 +783,7 @@ const translations = {
     jobs_title: "Trabajos de encordado",
     jobs_subtitle: "Registra trabajos y precios.",
     jobs_search_customer: "Buscar cliente...",
+    jobs_table_search: "Buscar cliente o cordaje...",
     jobs_search_string: "Buscar cordaje...",
     jobs_search_customer_string: "Buscar cordaje del cliente...",
     jobs_customer_string: "Cordaje del cliente",
@@ -1299,31 +1306,140 @@ function renderInventory() {
     .join("");
 }
 
+function parseTensionValue(value) {
+  if (!value) return 0;
+  const first = String(value).split("/")[0];
+  const numeric = Number(first.replace(/[^0-9.]/g, ""));
+  return Number.isNaN(numeric) ? 0 : numeric;
+}
+
+function compareSortValues(a, b) {
+  if (typeof a === "number" && typeof b === "number") {
+    return a - b;
+  }
+  return String(a || "").localeCompare(String(b || ""), undefined, { numeric: true, sensitivity: "base" });
+}
+
+function updateJobSortIndicators() {
+  $$("#jobTableList .sort-btn").forEach((btn) => {
+    const key = btn.dataset.sort;
+    const isActive = key === jobSortState.key;
+    btn.classList.toggle("active", isActive);
+    btn.classList.toggle("asc", isActive && jobSortState.direction === "asc");
+    btn.classList.toggle("desc", isActive && jobSortState.direction === "desc");
+    const th = btn.closest("th");
+    if (th) {
+      th.setAttribute("aria-sort", isActive ? (jobSortState.direction === "asc" ? "ascending" : "descending") : "none");
+    }
+  });
+}
+
+function setJobSort(key) {
+  if (!key) return;
+  if (jobSortState.key === key) {
+    jobSortState.direction = jobSortState.direction === "asc" ? "desc" : "asc";
+  } else {
+    jobSortState.key = key;
+    jobSortState.direction = key === "date" ? "desc" : "asc";
+  }
+  renderJobs();
+}
+
 function renderJobs() {
   const table = $("#jobTable");
   const unit = state.settings?.tensionUnit || "kg";
-  table.innerHTML = [...state.jobs]
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .map((job) => {
-      const customer = state.customers.find((c) => c.id === job.customerId);
-      const racket = state.rackets.find((r) => r.id === job.racketId);
-      const stringItem = state.inventory.find((i) => i.id === job.inventoryId);
-      const customerStringItem = state.customerStrings.find((i) => i.id === job.customerStringId);
-      const stringLabel = job.stringSource === "customer"
-        ? customerStringItem
-          ? formatCustomerStringLabel(customerStringItem)
-          : t("jobs_string_source_customer")
-        : stringItem
-          ? `${stringItem.name} ${stringItem.gauge || ""}`
-          : "-";
+  const normalizedQuery = jobSearchQuery.trim().toLowerCase();
+  const rows = state.jobs.map((job) => {
+    const customer = state.customers.find((c) => c.id === job.customerId);
+    const racket = state.rackets.find((r) => r.id === job.racketId);
+    const stringItem = state.inventory.find((i) => i.id === job.inventoryId);
+    const customerStringItem = state.customerStrings.find((i) => i.id === job.customerStringId);
+    const customerName = customer ? customer.name : t("common_unknown");
+    const racketModel = racket ? racket.model : t("common_unknown");
+    const stringLabel = job.stringSource === "customer"
+      ? customerStringItem
+        ? formatCustomerStringLabel(customerStringItem)
+        : t("jobs_string_source_customer")
+      : stringItem
+        ? `${stringItem.name} ${stringItem.gauge || ""}`.trim()
+        : "-";
+    const sourceLabel = job.stringSource === "customer" ? t("common_customer_string") : t("common_shop");
+    return {
+      job,
+      customerName,
+      racketModel,
+      stringLabel,
+      sourceLabel,
+      dateValue: job.date ? new Date(job.date).getTime() : 0,
+      tensionValue: parseTensionValue(job.tension),
+      laborValue: Number(job.laborPrice || 0),
+      timeValue: Number(job.durationSeconds || 0),
+      priceValue: Number(job.totalPrice || 0)
+    };
+  });
+
+  const filteredRows = normalizedQuery
+    ? rows.filter((row) => {
+        const searchTarget = `${row.customerName} ${row.stringLabel}`.toLowerCase();
+        return searchTarget.includes(normalizedQuery);
+      })
+    : rows;
+
+  const sortedRows = filteredRows.sort((a, b) => {
+    const direction = jobSortState.direction === "asc" ? 1 : -1;
+    const sortKey = jobSortState.key;
+    const aValue = sortKey === "date"
+      ? a.dateValue
+      : sortKey === "customer"
+        ? a.customerName
+        : sortKey === "racket"
+          ? a.racketModel
+          : sortKey === "string"
+            ? a.stringLabel
+            : sortKey === "source"
+              ? a.sourceLabel
+              : sortKey === "tension"
+                ? a.tensionValue
+                : sortKey === "labor"
+                  ? a.laborValue
+                  : sortKey === "time"
+                    ? a.timeValue
+                    : sortKey === "price"
+                      ? a.priceValue
+                      : a.dateValue;
+    const bValue = sortKey === "date"
+      ? b.dateValue
+      : sortKey === "customer"
+        ? b.customerName
+        : sortKey === "racket"
+          ? b.racketModel
+          : sortKey === "string"
+            ? b.stringLabel
+            : sortKey === "source"
+              ? b.sourceLabel
+              : sortKey === "tension"
+                ? b.tensionValue
+                : sortKey === "labor"
+                  ? b.laborValue
+                  : sortKey === "time"
+                    ? b.timeValue
+                    : sortKey === "price"
+                      ? b.priceValue
+                      : b.dateValue;
+    return compareSortValues(aValue, bValue) * direction;
+  });
+
+  table.innerHTML = sortedRows
+    .map((row) => {
+      const job = row.job;
       const laborAlert = job.stringSource === "shop" && Number(job.stringPrice || 0) > Number(job.laborPrice || 0);
       return `
         <tr>
           <td>${job.date}</td>
-          <td>${customer ? customer.name : t("common_unknown")}</td>
-          <td>${racket ? racket.model : t("common_unknown")}</td>
-          <td>${stringLabel}</td>
-          <td>${job.stringSource === "customer" ? t("common_customer_string") : t("common_shop")}</td>
+          <td>${row.customerName}</td>
+          <td>${row.racketModel}</td>
+          <td>${row.stringLabel}</td>
+          <td>${row.sourceLabel}</td>
           <td>${job.tension ? `${job.tension} ${unit}` : "-"}</td>
           <td><span class="${laborAlert ? "alert" : ""}">${formatMoney(job.laborPrice)}</span></td>
           <td>${formatDuration(job.durationSeconds)}</td>
@@ -1336,6 +1452,7 @@ function renderJobs() {
       `;
     })
     .join("");
+  updateJobSortIndicators();
 }
 
 function renderDashboard() {
@@ -2162,6 +2279,18 @@ function setupForms() {
   $("#importFile").addEventListener("change", handleImport);
   $("#resetBtn").addEventListener("click", handleReset);
   $("#jobCancelBtn").addEventListener("click", resetJobForm);
+  const jobSearchInput = $("#jobSearchInput");
+  if (jobSearchInput) {
+    jobSearchInput.addEventListener("input", (event) => {
+      jobSearchQuery = event.target.value || "";
+      renderJobs();
+    });
+  }
+  $$("#jobTableList .sort-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setJobSort(btn.dataset.sort);
+    });
+  });
   const startButton = $("#startStringingBtn");
   if (startButton) {
     startButton.addEventListener("click", toggleStringingTimer);
