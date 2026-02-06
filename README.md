@@ -1,2 +1,2 @@
 ## Description
-By stringer 4 stringers
+By stringer for stringers
