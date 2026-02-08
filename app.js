@@ -16,6 +16,7 @@ const state = {
 const storageKey = "quick-stringer-data";
 const onboardingKey = "quick-stringer-onboarding";
 const schemaVersion = 6;
+const appVersion = "1.0.0";
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
@@ -149,6 +150,13 @@ const translations = {
     footer_export_csv: "Export CSV",
     footer_import: "Import Data",
     footer_reset: "Reset All Data",
+    import_success: "Import successful.",
+    import_failed: "Import failed",
+    import_version_same: "File schema version is",
+    import_version_unknown: "File schema version unknown",
+    import_migrated_from: "Migration applied from",
+    import_migrated_to: "to",
+    import_migrated: "Migrations applied.",
     info_title: "How This App Works",
     info_subtitle: "Simple, private, and fully in your browser.",
     info_step1_title: "1. You enter your data",
@@ -316,6 +324,13 @@ const translations = {
     footer_export_csv: "CSV eksportas",
     footer_import: "Importuoti",
     footer_reset: "Ištrinti viską",
+    import_success: "Importas sėkmingas.",
+    import_failed: "Importas nepavyko",
+    import_version_same: "Failo schemos versija",
+    import_version_unknown: "Failo schemos versija nežinoma",
+    import_migrated_from: "Migracija atlikta iš",
+    import_migrated_to: "į",
+    import_migrated: "Migracijos pritaikytos.",
     info_title: "Kaip veikia ši programa",
     info_subtitle: "Paprasta, privatu ir tik naršyklėje.",
     info_step1_title: "1. Jūs įvedate duomenis",
@@ -483,6 +498,13 @@ const translations = {
     footer_export_csv: "CSV exportieren",
     footer_import: "Daten importieren",
     footer_reset: "Alle Daten löschen",
+    import_success: "Import erfolgreich.",
+    import_failed: "Import fehlgeschlagen",
+    import_version_same: "Datei-Schema-Version ist",
+    import_version_unknown: "Datei-Schema-Version unbekannt",
+    import_migrated_from: "Migration von",
+    import_migrated_to: "zu",
+    import_migrated: "Migrationen angewendet.",
     info_title: "So funktioniert die App",
     info_subtitle: "Einfach, privat und nur im Browser.",
     info_step1_title: "1. Du gibst Daten ein",
@@ -650,6 +672,13 @@ const translations = {
     footer_export_csv: "Exporter CSV",
     footer_import: "Importer",
     footer_reset: "Tout réinitialiser",
+    import_success: "Import réussi.",
+    import_failed: "Import échoué",
+    import_version_same: "La version du schéma est",
+    import_version_unknown: "Version du schéma inconnue",
+    import_migrated_from: "Migration de",
+    import_migrated_to: "vers",
+    import_migrated: "Migrations appliquées.",
     info_title: "Comment l’application fonctionne",
     info_subtitle: "Simple, privé et dans votre navigateur.",
     info_step1_title: "1. Vous saisissez vos données",
@@ -817,6 +846,13 @@ const translations = {
     footer_export_csv: "Exportar CSV",
     footer_import: "Importar",
     footer_reset: "Borrar todo",
+    import_success: "Importación exitosa.",
+    import_failed: "Importación fallida",
+    import_version_same: "La versión del esquema es",
+    import_version_unknown: "Versión de esquema desconocida",
+    import_migrated_from: "Migración de",
+    import_migrated_to: "a",
+    import_migrated: "Migraciones aplicadas.",
     info_title: "Cómo funciona la app",
     info_subtitle: "Simple, privada y en tu navegador.",
     info_step1_title: "1. Introduces tus datos",
@@ -945,6 +981,31 @@ function renderGreeting() {
   } else {
     greeting.textContent = t("dashboard_greeting");
   }
+}
+
+function renderVersion() {
+  const el = $("#appVersion");
+  if (!el) return;
+  el.textContent = `v${appVersion} · schema ${schemaVersion}`;
+}
+
+function buildImportMessage(fromVersion, toVersion) {
+  if (Number.isNaN(fromVersion) || fromVersion <= 0) {
+    return `${t("import_success")} ${t("import_version_unknown")} → ${toVersion}. ${t("import_migrated")}`;
+  }
+  if (fromVersion === toVersion) {
+    return `${t("import_success")} ${t("import_version_same")} ${toVersion}.`;
+  }
+  return `${t("import_success")} ${t("import_migrated_from")} ${fromVersion} ${t("import_migrated_to")} ${toVersion}.`;
+}
+
+function showToast(message, type = "") {
+  const toast = $("#toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.remove("hidden", "success", "error");
+  if (type) toast.classList.add(type);
+  clearTimeout(showToast._timer);
 }
 
 function loadState() {
@@ -1537,6 +1598,7 @@ function applySettings() {
     settingsForm.stringerName.value = state.settings?.stringerName || "";
   }
   renderGreeting();
+  renderVersion();
 }
 
 function renderAll() {
@@ -1549,6 +1611,7 @@ function renderAll() {
   renderDashboard();
   applySettings();
   applyTranslations();
+  renderVersion();
   saveState();
 }
 
@@ -2028,6 +2091,8 @@ function handleTabClick(event) {
   const tabId = button.dataset.tab;
   $$(".tab").forEach((tab) => tab.classList.toggle("active", tab === button));
   $$(".panel").forEach((panel) => panel.classList.toggle("active", panel.id === tabId));
+  const toast = $("#toast");
+  if (toast) toast.classList.add("hidden");
 }
 
 function handleQuickNav(event) {
@@ -2238,11 +2303,14 @@ function handleImport(event) {
   reader.onload = () => {
     try {
       const imported = JSON.parse(reader.result);
+      const importedVersion = Number(imported.schemaVersion || 0);
       const migrated = migrateData(imported);
       Object.assign(state, migrated);
       renderAll();
+      const message = buildImportMessage(importedVersion, schemaVersion);
+      showToast(message, "success");
     } catch (err) {
-      alert("Import failed. Please choose a valid backup file.");
+      showToast(`${t("import_failed")}: ${err.message}`, "error");
     }
   };
   reader.readAsText(file);
