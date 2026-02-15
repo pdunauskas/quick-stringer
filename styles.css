@@ -154,6 +154,98 @@ main {
   margin-top: 16px;
 }
 
+.section-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 6px;
+}
+
+.checkbox-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.crosses-section {
+  display: contents;
+}
+
+.slot-section {
+  grid-column: 1 / -1;
+  padding: 16px;
+  border-radius: 16px;
+  background: transparent;
+  border: 1px solid rgba(125, 169, 79, 0.65);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px 18px;
+}
+
+.slot-section .section-title {
+  padding-top: 0;
+  margin-top: 0;
+}
+
+.updates-list {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.update-card {
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(125, 169, 79, 0.4);
+  background: rgba(10, 16, 32, 0.75);
+}
+
+.update-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+.update-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.update-text {
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+
+.update-columns {
+  display: grid;
+  gap: 12px;
+}
+
+.update-columns h4 {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.update-columns ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+}
+
 .panel-header {
   margin-top: 24px;
 }

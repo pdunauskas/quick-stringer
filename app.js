@@ -15,8 +15,8 @@ const state = {
 
 const storageKey = "quick-stringer-data";
 const onboardingKey = "quick-stringer-onboarding";
-const schemaVersion = 6;
-const appVersion = "1.0.0";
+const schemaVersion = 7;
+const appVersion = "1.1.2";
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => document.querySelectorAll(selector);
@@ -37,6 +37,7 @@ const translations = {
     tab_rackets: "Rackets",
     tab_inventory: "String Inventory",
     tab_jobs: "Stringing Jobs",
+    tab_updates: "Updates",
     dashboard_today: "Today",
     dashboard_8weeks: "Past 8 Weeks",
     dashboard_jobs_month: "Jobs This Month",
@@ -129,6 +130,9 @@ const translations = {
     jobs_string_source: "String Source",
     jobs_string_source_shop: "My String",
     jobs_string_source_customer: "Customer String",
+    jobs_mains: "Mains",
+    jobs_crosses: "Crosses",
+    jobs_hybrid_toggle: "Hybrid stringing (enable crosses)",
     jobs_string_used: "String Used",
     jobs_date: "Date",
     jobs_tension: "Tension",
@@ -142,6 +146,7 @@ const translations = {
     jobs_stop: "Stop Timer",
     jobs_finish: "Finish & Save",
     jobs_source: "Source",
+    jobs_source_hybrid: "Hybrid",
     jobs_tension_header: "Tension",
     jobs_time_header: "Time",
     jobs_price: "Price",
@@ -172,6 +177,20 @@ const translations = {
     info_backup_desc: "There are two types of backups:",
     info_backup_export: "Export Data: use this to back up and later upload to continue working.",
     info_backup_csv: "Export CSV: extra export for third‑party apps, not importable back here.",
+    updates_title: "Updates",
+    updates_subtitle: "What’s new in Quick Stringer.",
+    updates_post_title_112: "Hybrid-ready stringing workflow",
+    updates_post_marketing_112:
+      "Plan mains and crosses in one place, auto-calc costs per spool, and keep inventory accurate without extra math. This update trims admin time and helps you quote with confidence.",
+    updates_post_new_112: "New",
+    updates_post_changed_112: "Changed",
+    updates_post_removed_112: "Removed",
+    updates_post_new_list_112:
+      "Hybrid toggle for separate mains/crosses||Cross-source tracking for each slot||Automatic string price from full spool cost",
+    updates_post_changed_list_112:
+      "Jobs now show mains/crosses detail in the list||Loss-making labor is highlighted when shop string costs exceed labor",
+    updates_post_removed_list_112:
+      "Single-string-only job flow; jobs now support two slots",
     onboarding_title: "Welcome to Quick Stringer",
     onboarding_subtitle: "Here’s the fastest way to start tracking your stringing work.",
     onboarding_step1_title: "1. Add Customers",
@@ -213,6 +232,7 @@ const translations = {
     tab_rackets: "Raketės",
     tab_inventory: "Stygų inventorius",
     tab_jobs: "Stygavimo darbai",
+    tab_updates: "Atnaujinimai",
     dashboard_today: "Šiandien",
     dashboard_8weeks: "Paskutinės 8 savaitės",
     dashboard_jobs_month: "Darbai šį mėn.",
@@ -303,6 +323,9 @@ const translations = {
     jobs_string_source: "Stygos šaltinis",
     jobs_string_source_shop: "Mano styga",
     jobs_string_source_customer: "Kliento styga",
+    jobs_mains: "Pagrindinės",
+    jobs_crosses: "Skersinės",
+    jobs_hybrid_toggle: "Hibridinis stygavimas (įjungti skersines)",
     jobs_string_used: "Naudota styga",
     jobs_date: "Data",
     jobs_tension: "Įtempimas",
@@ -316,6 +339,7 @@ const translations = {
     jobs_stop: "Sustabdyti laikmatį",
     jobs_finish: "Baigti ir išsaugoti",
     jobs_source: "Šaltinis",
+    jobs_source_hybrid: "Hibridas",
     jobs_tension_header: "Įtempimas",
     jobs_time_header: "Laikas",
     jobs_price: "Kaina",
@@ -346,6 +370,20 @@ const translations = {
     info_backup_desc: "Yra du atsarginių kopijų tipai:",
     info_backup_export: "Eksportuoti duomenis: naudokite atsarginei kopijai ir vėliau įkelkite tęsti darbą.",
     info_backup_csv: "Eksportuoti CSV: papildoma išklotinė trečiųjų šalių programoms, jos neįmanoma importuoti.",
+    updates_title: "Atnaujinimai",
+    updates_subtitle: "Kas naujo „Quick Stringer“.",
+    updates_post_title_112: "Hibridinio stygavimo eiga",
+    updates_post_marketing_112:
+      "Vienoje vietoje suplanuokite pagrindines ir skersines stygas, automatiškai skaičiuokite kainą pagal ritę ir palaikykite tikslų likutį be papildomo skaičiavimo.",
+    updates_post_new_112: "Nauja",
+    updates_post_changed_112: "Pakeista",
+    updates_post_removed_112: "Pašalinta",
+    updates_post_new_list_112:
+      "Hibrido jungiklis atskiroms pagrindinėms/skersinėms||Kiekvieno lizdo šaltinio sekimas||Automatinis kainos skaičiavimas nuo pilnos ritės kainos",
+    updates_post_changed_list_112:
+      "Darbų sąrašas rodo pagrindines/skersines||Pažymimi atvejai, kai parduotuvės stygos kaina viršija darbo kainą",
+    updates_post_removed_list_112:
+      "Vienos stygos darbo eiga; dabar darbai palaiko du lizdus",
     onboarding_title: "Sveiki atvykę į Quick Stringer",
     onboarding_subtitle: "Greitas startas stygavimo darbams sekti.",
     onboarding_step1_title: "1. Pridėkite klientus",
@@ -387,6 +425,7 @@ const translations = {
     tab_rackets: "Schläger",
     tab_inventory: "Saitenlager",
     tab_jobs: "Bespannungen",
+    tab_updates: "Updates",
     dashboard_today: "Heute",
     dashboard_8weeks: "Letzte 8 Wochen",
     dashboard_jobs_month: "Jobs diesen Monat",
@@ -477,6 +516,9 @@ const translations = {
     jobs_string_source: "Saitenquelle",
     jobs_string_source_shop: "Meine Saite",
     jobs_string_source_customer: "Kundensaite",
+    jobs_mains: "Längssaiten",
+    jobs_crosses: "Quersaiten",
+    jobs_hybrid_toggle: "Hybridbespannung (Quersaiten aktivieren)",
     jobs_string_used: "Verwendete Saite",
     jobs_date: "Datum",
     jobs_tension: "Spannung",
@@ -490,6 +532,7 @@ const translations = {
     jobs_stop: "Timer stoppen",
     jobs_finish: "Fertig & speichern",
     jobs_source: "Quelle",
+    jobs_source_hybrid: "Hybrid",
     jobs_tension_header: "Spannung",
     jobs_time_header: "Zeit",
     jobs_price: "Preis",
@@ -520,6 +563,20 @@ const translations = {
     info_backup_desc: "Es gibt zwei Backup‑Arten:",
     info_backup_export: "Daten exportieren: für Backup und späteres Importieren.",
     info_backup_csv: "CSV exportieren: für Drittanbieter, nicht wieder importierbar.",
+    updates_title: "Updates",
+    updates_subtitle: "Was ist neu in Quick Stringer.",
+    updates_post_title_112: "Hybrid‑fähiger Bespannungsablauf",
+    updates_post_marketing_112:
+      "Mains und Crosses an einem Ort planen, Kosten pro Rolle automatisch berechnen und den Bestand ohne Extra‑Rechnen sauber halten. Das spart Zeit und macht Angebote sicherer.",
+    updates_post_new_112: "Neu",
+    updates_post_changed_112: "Geändert",
+    updates_post_removed_112: "Entfernt",
+    updates_post_new_list_112:
+      "Hybrid‑Schalter für getrennte Längs/Quer‑Saiten||Quellenverfolgung pro Slot||Automatische Preisberechnung aus dem Rollenpreis",
+    updates_post_changed_list_112:
+      "Jobs zeigen Mains/Crosses im Detail||Markierung, wenn Shop‑Saitenkosten den Arbeitslohn übersteigen",
+    updates_post_removed_list_112:
+      "Nur‑eine‑Saite‑Workflow; Jobs unterstützen jetzt zwei Slots",
     onboarding_title: "Willkommen bei Quick Stringer",
     onboarding_subtitle: "Schnellstart für deine Bespannungen.",
     onboarding_step1_title: "1. Kunden anlegen",
@@ -561,6 +618,7 @@ const translations = {
     tab_rackets: "Raquettes",
     tab_inventory: "Stock de cordage",
     tab_jobs: "Travaux de cordage",
+    tab_updates: "Mises à jour",
     dashboard_today: "Aujourd’hui",
     dashboard_8weeks: "8 dernières semaines",
     dashboard_jobs_month: "Travaux ce mois",
@@ -651,6 +709,9 @@ const translations = {
     jobs_string_source: "Source du cordage",
     jobs_string_source_shop: "Mon cordage",
     jobs_string_source_customer: "Cordage client",
+    jobs_mains: "Montants",
+    jobs_crosses: "Travers",
+    jobs_hybrid_toggle: "Montage hybride (activer les travers)",
     jobs_string_used: "Cordage utilisé",
     jobs_date: "Date",
     jobs_tension: "Tension",
@@ -664,6 +725,7 @@ const translations = {
     jobs_stop: "Arrêter le chrono",
     jobs_finish: "Terminer et enregistrer",
     jobs_source: "Source",
+    jobs_source_hybrid: "Hybride",
     jobs_tension_header: "Tension",
     jobs_time_header: "Temps",
     jobs_price: "Prix",
@@ -694,6 +756,20 @@ const translations = {
     info_backup_desc: "Il existe deux types de sauvegardes :",
     info_backup_export: "Exporter les données : sauvegarde à réimporter pour continuer.",
     info_backup_csv: "Exporter CSV : pour apps tierces, non réimportable ici.",
+    updates_title: "Mises à jour",
+    updates_subtitle: "Quoi de neuf dans Quick Stringer.",
+    updates_post_title_112: "Flux de cordage hybride",
+    updates_post_marketing_112:
+      "Planifiez montants et travers en un seul endroit, calculez le coût par bobine automatiquement et gardez un stock juste sans recalcul. Moins d’administratif, devis plus sûrs.",
+    updates_post_new_112: "Nouveau",
+    updates_post_changed_112: "Modifié",
+    updates_post_removed_112: "Supprimé",
+    updates_post_new_list_112:
+      "Bascule hybride pour montants/travers séparés||Suivi des sources par slot||Calcul automatique du prix depuis le coût de la bobine",
+    updates_post_changed_list_112:
+      "Les jobs affichent montants/travers||Signalement quand le coût des cordes magasin dépasse la main‑d’œuvre",
+    updates_post_removed_list_112:
+      "Flux “une seule corde” ; les jobs gèrent désormais deux slots",
     onboarding_title: "Bienvenue sur Quick Stringer",
     onboarding_subtitle: "Guide rapide pour commencer.",
     onboarding_step1_title: "1. Ajoutez des clients",
@@ -735,6 +811,7 @@ const translations = {
     tab_rackets: "Raquetas",
     tab_inventory: "Inventario de cordaje",
     tab_jobs: "Trabajos de encordado",
+    tab_updates: "Actualizaciones",
     dashboard_today: "Hoy",
     dashboard_8weeks: "Últimas 8 semanas",
     dashboard_jobs_month: "Trabajos del mes",
@@ -825,6 +902,9 @@ const translations = {
     jobs_string_source: "Origen del cordaje",
     jobs_string_source_shop: "Mi cordaje",
     jobs_string_source_customer: "Cordaje del cliente",
+    jobs_mains: "Verticales",
+    jobs_crosses: "Horizontales",
+    jobs_hybrid_toggle: "Encordado híbrido (activar horizontales)",
     jobs_string_used: "Cordaje usado",
     jobs_date: "Fecha",
     jobs_tension: "Tensión",
@@ -838,6 +918,7 @@ const translations = {
     jobs_stop: "Detener temporizador",
     jobs_finish: "Finalizar y guardar",
     jobs_source: "Origen",
+    jobs_source_hybrid: "Híbrido",
     jobs_tension_header: "Tensión",
     jobs_time_header: "Tiempo",
     jobs_price: "Precio",
@@ -868,6 +949,20 @@ const translations = {
     info_backup_desc: "Hay dos tipos de copias:",
     info_backup_export: "Exportar datos: para respaldo e importar después.",
     info_backup_csv: "Exportar CSV: para terceros, no se puede importar aquí.",
+    updates_title: "Actualizaciones",
+    updates_subtitle: "Novedades en Quick Stringer.",
+    updates_post_title_112: "Flujo de encordado híbrido",
+    updates_post_marketing_112:
+      "Planifica verticales y horizontales en un solo lugar, calcula el coste por bobina automáticamente y mantén el inventario exacto sin cálculos extra.",
+    updates_post_new_112: "Nuevo",
+    updates_post_changed_112: "Cambiado",
+    updates_post_removed_112: "Eliminado",
+    updates_post_new_list_112:
+      "Selector híbrido para verticales/horizontales||Seguimiento de fuente por tramo||Precio automático desde el coste de la bobina",
+    updates_post_changed_list_112:
+      "Los trabajos muestran detalle de verticales/horizontales||Se marca cuando el coste de cuerda supera la mano de obra",
+    updates_post_removed_list_112:
+      "Flujo de un solo cordaje; ahora los trabajos admiten dos ranuras",
     onboarding_title: "Bienvenido a Quick Stringer",
     onboarding_subtitle: "Guía rápida para empezar.",
     onboarding_step1_title: "1. Agrega clientes",
@@ -938,6 +1033,7 @@ function applyTranslations() {
 
   updateDynamicButtonLabels();
   renderGreeting();
+  renderUpdates();
 }
 
 function updateDynamicButtonLabels() {
@@ -987,6 +1083,67 @@ function renderVersion() {
   const el = $("#appVersion");
   if (!el) return;
   el.textContent = `v${appVersion} · schema ${schemaVersion}`;
+}
+
+function splitUpdateList(key) {
+  return t(key)
+    .split("||")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function getUpdates() {
+  return [
+    {
+      date: "2026-02-15",
+      version: appVersion,
+      titleKey: "updates_post_title_112",
+      marketingKey: "updates_post_marketing_112",
+      newKey: "updates_post_new_112",
+      changedKey: "updates_post_changed_112",
+      removedKey: "updates_post_removed_112",
+      newListKey: "updates_post_new_list_112",
+      changedListKey: "updates_post_changed_list_112",
+      removedListKey: "updates_post_removed_list_112"
+    }
+  ];
+}
+
+function renderUpdates() {
+  const container = $("#updatesList");
+  if (!container) return;
+  const updates = getUpdates();
+  container.innerHTML = updates
+    .map((item) => {
+      const newItems = splitUpdateList(item.newListKey);
+      const changedItems = splitUpdateList(item.changedListKey);
+      const removedItems = splitUpdateList(item.removedListKey);
+      return `
+        <article class="update-card">
+          <div class="update-meta">
+            <span>${item.date}</span>
+            <span>${item.version}</span>
+          </div>
+          <h3 class="update-title">${t(item.titleKey)}</h3>
+          <p class="update-text">${t(item.marketingKey)}</p>
+          <div class="update-columns">
+            <div>
+              <h4>${t(item.newKey)}</h4>
+              <ul>${newItems.map((entry) => `<li>${entry}</li>`).join("")}</ul>
+            </div>
+            <div>
+              <h4>${t(item.changedKey)}</h4>
+              <ul>${changedItems.map((entry) => `<li>${entry}</li>`).join("")}</ul>
+            </div>
+            <div>
+              <h4>${t(item.removedKey)}</h4>
+              <ul>${removedItems.map((entry) => `<li>${entry}</li>`).join("")}</ul>
+            </div>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
 }
 
 function buildImportMessage(fromVersion, toVersion) {
@@ -1069,43 +1226,14 @@ function renderOptions() {
       .join("");
   }
 
-  const inventoryOptions = state.inventory
-    .map((item) => {
-      const baseLength = Number(item.initialLength || item.lengthLeft || 0);
-      const perMeter = baseLength > 0 && item.costTotal ? item.costTotal / baseLength : null;
-      const costLabel = perMeter ? ` · ${formatMoney(perMeter)}/m` : "";
-      return `<option value="${item.id}">${item.name} ${item.gauge || ""} (${Number(item.lengthLeft || 0).toFixed(1)}m${costLabel})</option>`;
-    })
-    .join("");
-
-  const inventoryList = $("#inventoryList");
-  if (inventoryList) {
-    inventoryList.innerHTML = state.inventory
-      .map((item) => {
-        const label = formatInventoryLabel(item);
-        return `<option value="${label}" data-id="${item.id}"></option>`;
-      })
-      .join("");
-  }
-
-  const customerStringList = $("#customerStringList");
-  if (customerStringList) {
-    const customerId = $('input[name="customerId"]').value;
-    const pool = customerId
-      ? state.customerStrings.filter((item) => item.customerId === customerId)
-      : state.customerStrings;
-    const options = pool
-      .map((item) => {
-        const label = formatCustomerStringLabel(item);
-        return `<option value="${label}" data-id="${item.id}"></option>`;
-      })
-      .join("");
-    customerStringList.innerHTML = options;
-  }
+  refreshInventoryList("Main");
+  refreshInventoryList("Cross");
+  refreshCustomerStringList("Main");
+  refreshCustomerStringList("Cross");
 }
 
-function refreshCustomerStringList() {
-  const customerStringList = $("#customerStringList");
+function refreshCustomerStringList(slot) {
+  const customerStringList = $(`#customerStringList${slot}`);
   if (!customerStringList) return;
   const customerId = $('input[name="customerId"]').value;
   const pool = customerId
@@ -1118,6 +1246,17 @@ function refreshCustomerStringList() {
     })
     .join("");
   customerStringList.innerHTML = options;
+}
+
+function refreshInventoryList(slot) {
+  const inventoryList = $(`#inventoryList${slot}`);
+  if (!inventoryList) return;
+  inventoryList.innerHTML = state.inventory
+    .map((item) => {
+      const label = formatInventoryLabel(item);
+      return `<option value="${label}" data-id="${item.id}"></option>`;
+    })
+    .join("");
 }
 
 function updateRacketOptionsForCustomer(customerId, selectedId = "") {
@@ -1159,6 +1298,53 @@ function formatCustomerStringLabel(item) {
   return `${item.model}${gauge}${color}`;
 }
 
+function normalizeJobSlots(job) {
+  if (job?.mains || job?.crosses) {
+    return {
+      mains: job.mains || null,
+      crosses: job.crosses || null
+    };
+  }
+  return {
+    mains: {
+      source: job.stringSource,
+      inventoryId: job.inventoryId,
+      customerStringId: job.customerStringId,
+      lengthUsed: job.lengthUsed
+    },
+    crosses: null
+  };
+}
+
+function isSlotActive(slot) {
+  if (!slot) return false;
+  return Number(slot.lengthUsed || 0) > 0;
+}
+
+function formatJobStringPart(slot, label) {
+  if (!slot) return "";
+  if (!isSlotActive(slot)) return "";
+  if (slot.source === "shop") {
+    const item = state.inventory.find((i) => i.id === slot.inventoryId);
+    const name = item ? `${item.name} ${item.gauge || ""}`.trim() : t("common_unknown");
+    return `${label}: ${name}`;
+  }
+  if (slot.source === "customer") {
+    const item = state.customerStrings.find((i) => i.id === slot.customerStringId);
+    const name = item ? formatCustomerStringLabel(item) : t("jobs_string_source_customer");
+    return `${label}: ${name}`;
+  }
+  return "";
+}
+
+function getJobSources(job) {
+  const slots = normalizeJobSlots(job);
+  const sources = [];
+  if (slots.mains?.source && isSlotActive(slots.mains)) sources.push(slots.mains.source);
+  if (slots.crosses?.source && isSlotActive(slots.crosses)) sources.push(slots.crosses.source);
+  return Array.from(new Set(sources));
+}
+
 function syncCustomerFromInput() {
   const input = $('input[name="customerSearch"]');
   const hidden = $('input[name="customerId"]');
@@ -1186,39 +1372,42 @@ function resolveCustomerId(value) {
   return "";
 }
 
-function syncInventoryFromInput() {
-  const input = $('input[name="inventorySearch"]');
-  const hidden = $('input[name="inventoryId"]');
+function syncInventoryFromInput(slot) {
+  const input = $(`input[name="inventorySearch${slot}"]`);
+  const hidden = $(`input[name="inventoryId${slot}"]`);
   if (!input || !hidden) return;
-  const match = Array.from($("#inventoryList").options || []).find(
-    (opt) => opt.value === input.value
-  );
-  if (match) {
-    hidden.value = match.dataset.id || "";
-    return;
-  }
-  const normalized = input.value.trim().toLowerCase();
-  if (!normalized) {
-    hidden.value = "";
-    return;
-  }
-  const byName = state.inventory.filter((item) =>
-    item.name.trim().toLowerCase() === normalized
-  );
-  hidden.value = byName.length === 1 ? byName[0].id : "";
+  hidden.value = resolveInventoryId(input.value, slot);
 }
 
-function syncCustomerStringFromInput() {
-  const input = $('input[name="customerStringSearch"]');
-  const hidden = $('input[name="customerStringId"]');
-  if (!input || !hidden) return;
-  hidden.value = resolveCustomerStringId(input.value);
-}
-
-function resolveCustomerStringId(value) {
+function resolveInventoryId(value, slot) {
   const inputValue = (value || "").trim();
   if (!inputValue) return "";
-  const options = Array.from($("#customerStringList").options || []);
+  const options = Array.from($(`#inventoryList${slot}`)?.options || []);
+  const match = options.find((opt) => opt.value === inputValue);
+  if (match) return match.dataset.id || "";
+  const normalized = inputValue.toLowerCase();
+  const byLabel = state.inventory.filter(
+    (item) => formatInventoryLabel(item).toLowerCase() === normalized
+  );
+  if (byLabel.length === 1) return byLabel[0].id;
+  const byName = state.inventory.filter(
+    (item) => item.name.trim().toLowerCase() === normalized
+  );
+  if (byName.length === 1) return byName[0].id;
+  return "";
+}
+
+function syncCustomerStringFromInput(slot) {
+  const input = $(`input[name="customerStringSearch${slot}"]`);
+  const hidden = $(`input[name="customerStringId${slot}"]`);
+  if (!input || !hidden) return;
+  hidden.value = resolveCustomerStringId(input.value, slot);
+}
+
+function resolveCustomerStringId(value, slot) {
+  const inputValue = (value || "").trim();
+  if (!inputValue) return "";
+  const options = Array.from($(`#customerStringList${slot}`)?.options || []);
   const match = options.find((opt) => opt.value === inputValue);
   if (match) return match.dataset.id || "";
   const normalized = inputValue.toLowerCase();
@@ -1238,9 +1427,12 @@ function resolveCustomerStringId(value) {
 function maybeApplyLastTension() {
   const customerId = $('input[name="customerId"]').value;
   const racketId = $('#jobForm select[name="racketId"]').value;
-  const stringSource = $('#jobForm select[name="stringSource"]').value;
-  const inventoryId = $('input[name="inventoryId"]').value || null;
-  const customerStringId = $('input[name="customerStringId"]').value || null;
+  const stringSourceMain = $('#jobForm select[name="stringSourceMain"]').value;
+  const stringSourceCross = $('#jobForm select[name="stringSourceCross"]').value;
+  const inventoryIdMain = $('input[name="inventoryIdMain"]').value || null;
+  const inventoryIdCross = $('input[name="inventoryIdCross"]').value || null;
+  const customerStringIdMain = $('input[name="customerStringIdMain"]').value || null;
+  const customerStringIdCross = $('input[name="customerStringIdCross"]').value || null;
   const tensionInput = $('input[name="tension"]');
   const laborInput = $('input[name="laborPrice"]');
   if (!customerId || !racketId || !tensionInput) return;
@@ -1248,9 +1440,16 @@ function maybeApplyLastTension() {
   const lastJob = findLastMatchingJob({
     customerId,
     racketId,
-    stringSource,
-    inventoryId,
-    customerStringId
+    mains: {
+      source: stringSourceMain,
+      inventoryId: inventoryIdMain,
+      customerStringId: customerStringIdMain
+    },
+    crosses: {
+      source: stringSourceCross,
+      inventoryId: inventoryIdCross,
+      customerStringId: customerStringIdCross
+    }
   });
   if (lastJob && lastJob.tension) {
     tensionInput.value = lastJob.tension;
@@ -1260,21 +1459,29 @@ function maybeApplyLastTension() {
   }
 }
 
-function findLastMatchingJob({ customerId, racketId, stringSource, inventoryId, customerStringId }) {
+function findLastMatchingJob({ customerId, racketId, mains, crosses }) {
   for (let i = state.jobs.length - 1; i >= 0; i -= 1) {
     const job = state.jobs[i];
     if (job.customerId !== customerId) continue;
     if (job.racketId !== racketId) continue;
-    if (job.stringSource !== stringSource) continue;
-    if (stringSource === "shop") {
-      if ((job.inventoryId || null) !== inventoryId) continue;
-    }
-    if (stringSource === "customer") {
-      if ((job.customerStringId || null) !== customerStringId) continue;
-    }
+    const slots = normalizeJobSlots(job);
+    if (!matchSlot(slots.mains, mains)) continue;
+    if (!matchSlot(slots.crosses, crosses)) continue;
     if (job.tension) return job;
   }
   return null;
+}
+
+function matchSlot(jobSlot, querySlot) {
+  if (!querySlot) return true;
+  if (!jobSlot) {
+    return !querySlot.inventoryId && !querySlot.customerStringId;
+  }
+  if (!jobSlot) return true;
+  if (querySlot.source && jobSlot.source !== querySlot.source) return false;
+  if (querySlot.source === "shop" && (jobSlot.inventoryId || null) !== (querySlot.inventoryId || null)) return false;
+  if (querySlot.source === "customer" && (jobSlot.customerStringId || null) !== (querySlot.customerStringId || null)) return false;
+  return true;
 }
 
 function renderCustomers() {
@@ -1413,18 +1620,20 @@ function renderJobs() {
   const rows = state.jobs.map((job) => {
     const customer = state.customers.find((c) => c.id === job.customerId);
     const racket = state.rackets.find((r) => r.id === job.racketId);
-    const stringItem = state.inventory.find((i) => i.id === job.inventoryId);
-    const customerStringItem = state.customerStrings.find((i) => i.id === job.customerStringId);
     const customerName = customer ? customer.name : t("common_unknown");
     const racketModel = racket ? racket.model : t("common_unknown");
-    const stringLabel = job.stringSource === "customer"
-      ? customerStringItem
-        ? formatCustomerStringLabel(customerStringItem)
-        : t("jobs_string_source_customer")
-      : stringItem
-        ? `${stringItem.name} ${stringItem.gauge || ""}`.trim()
-        : "-";
-    const sourceLabel = job.stringSource === "customer" ? t("common_customer_string") : t("common_shop");
+    const slots = normalizeJobSlots(job);
+    const mainsLabel = formatJobStringPart(slots.mains, "M");
+    const crossesLabel = formatJobStringPart(slots.crosses, "C");
+    const stringLabel = [mainsLabel, crossesLabel].filter(Boolean).join(" / ") || "-";
+    const sources = getJobSources(job);
+    const sourceLabel = sources.length > 1
+      ? t("jobs_source_hybrid")
+      : sources[0] === "shop"
+        ? t("common_shop")
+        : sources[0] === "customer"
+          ? t("common_customer_string")
+          : "-";
     return {
       job,
       customerName,
@@ -1493,7 +1702,7 @@ function renderJobs() {
   table.innerHTML = sortedRows
     .map((row) => {
       const job = row.job;
-      const laborAlert = job.stringSource === "shop" && Number(job.stringPrice || 0) > Number(job.laborPrice || 0);
+      const laborAlert = getJobSources(job).includes("shop") && Number(job.stringPrice || 0) > Number(job.laborPrice || 0);
       return `
         <tr>
           <td>${job.date}</td>
@@ -1537,7 +1746,12 @@ function renderDashboard() {
   $("#kpiProfit").textContent = formatMoney(profit);
   $("#kpiAvgTime").textContent = formatDuration(avgSeconds);
 
-  const totalLength = state.jobs.reduce((sum, job) => sum + Number(job.lengthUsed || 0), 0);
+  const totalLength = state.jobs.reduce((sum, job) => {
+    const slots = normalizeJobSlots(job);
+    const main = Number(slots.mains?.lengthUsed || 0);
+    const cross = Number(slots.crosses?.lengthUsed || 0);
+    return sum + main + cross;
+  }, 0);
   const totalTimeAll = state.jobs.reduce((sum, job) => sum + Number(job.durationSeconds || 0), 0);
   const totalLabor = state.jobs.reduce((sum, job) => sum + Number(job.laborPrice || 0), 0);
   const totalStringCosts = state.jobs.reduce((sum, job) => sum + Number(job.stringPrice || 0), 0);
@@ -1608,6 +1822,7 @@ function renderAll() {
   renderRackets();
   renderInventory();
   renderJobs();
+  renderUpdates();
   renderDashboard();
   applySettings();
   applyTranslations();
@@ -1738,13 +1953,19 @@ function handleJobSubmit(event) {
   const form = event.target;
   $('input[name="customerSearch"]').blur();
   const data = Object.fromEntries(new FormData(form));
-  const lengthUsed = Number(data.lengthUsed || 0);
   const editingId = data.jobId || null;
   const durationSeconds = Number(data.durationSeconds || 0);
   const customerId = resolveCustomerId(data.customerSearch);
-  syncInventoryFromInput();
-  syncCustomerStringFromInput();
-  const inventoryId = $('input[name="inventoryId"]').value || null;
+  syncInventoryFromInput("Main");
+  syncInventoryFromInput("Cross");
+  syncCustomerStringFromInput("Main");
+  syncCustomerStringFromInput("Cross");
+  const inventoryIdMain = $('input[name="inventoryIdMain"]').value || null;
+  const inventoryIdCross = $('input[name="inventoryIdCross"]').value || null;
+  const lengthUsedMain = Number(data.lengthUsedMain || 0);
+  const lengthUsedCross = Number(data.lengthUsedCross || 0);
+  const requireMain = lengthUsedMain > 0;
+  const requireCross = lengthUsedCross > 0;
 
   if (!customerId) {
     console.warn("Customer match failed:", {
@@ -1754,58 +1975,69 @@ function handleJobSubmit(event) {
     alert(t("alert_select_customer"));
     return;
   }
-  if (data.stringSource === "shop" && !inventoryId) {
+  if (data.stringSourceMain === "shop" && requireMain && !inventoryIdMain) {
     alert(t("alert_select_string"));
     return;
   }
-  let customerStringId = resolveCustomerStringId(data.customerStringSearch);
-  if (data.stringSource === "customer" && !customerStringId) {
-    const model = data.customerStringModel?.trim();
-    if (model) {
-      const newString = {
-        id: createId("cstr"),
-        customerId,
-        model,
-        gauge: data.customerStringGauge || "",
-        color: data.customerStringColor || ""
-      };
-      state.customerStrings.push(newString);
-      customerStringId = newString.id;
-    } else {
-      alert(t("alert_select_customer_string"));
-      return;
-    }
+  if (data.stringSourceCross === "shop" && requireCross && !inventoryIdCross) {
+    alert(t("alert_select_string"));
+    return;
+  }
+
+  let customerStringIdMain = null;
+  if (data.stringSourceMain === "customer" && requireMain) {
+    customerStringIdMain = resolveOrCreateCustomerString("Main", data, customerId);
+    if (!customerStringIdMain) return;
+  }
+  let customerStringIdCross = null;
+  if (data.stringSourceCross === "customer" && requireCross) {
+    customerStringIdCross = resolveOrCreateCustomerString("Cross", data, customerId);
+    if (!customerStringIdCross) return;
   }
 
   const laborPrice = Number(data.laborPrice || 0);
   let stringPrice = Number(data.stringPrice || 0);
-  if (data.stringSource === "shop" && inventoryId) {
-    const item = state.inventory.find((inv) => inv.id === inventoryId);
-    const baseLength = Number(item?.initialLength || item?.lengthLeft || 0);
-    if (item && baseLength > 0 && item.costTotal) {
-      const perMeter = item.costTotal / baseLength;
-      stringPrice = Number((perMeter * lengthUsed).toFixed(2));
-    }
-  }
+  const mainCost = data.stringSourceMain === "shop"
+    ? computeShopStringCost(inventoryIdMain, lengthUsedMain)
+    : 0;
+  const crossCost = data.stringSourceCross === "shop"
+    ? computeShopStringCost(inventoryIdCross, lengthUsedCross)
+    : 0;
+  stringPrice = Number((mainCost + crossCost).toFixed(2));
   const totalPrice = laborPrice + stringPrice;
 
   if (editingId) {
     const existing = state.jobs.find((job) => job.id === editingId);
     if (existing) {
       adjustInventoryForJobChange(existing, {
-        stringSource: data.stringSource,
-        inventoryId: data.inventoryId || null,
-        lengthUsed
+        mains: {
+          source: data.stringSourceMain,
+          inventoryId: inventoryIdMain,
+          lengthUsed: lengthUsedMain
+        },
+        crosses: {
+          source: data.stringSourceCross,
+          inventoryId: inventoryIdCross,
+          lengthUsed: lengthUsedCross
+        }
       });
       Object.assign(existing, {
-        customerId: data.customerId,
+        customerId,
         racketId: data.racketId,
         date: data.date,
         tension: data.tension,
-        stringSource: data.stringSource,
-        inventoryId,
-        customerStringId,
-        lengthUsed,
+        mains: {
+          source: data.stringSourceMain,
+          inventoryId: inventoryIdMain,
+          customerStringId: customerStringIdMain,
+          lengthUsed: lengthUsedMain
+        },
+        crosses: {
+          source: data.stringSourceCross,
+          inventoryId: inventoryIdCross,
+          customerStringId: customerStringIdCross,
+          lengthUsed: lengthUsedCross
+        },
         laborPrice,
         stringPrice,
         totalPrice,
@@ -1814,22 +2046,28 @@ function handleJobSubmit(event) {
       });
     }
   } else {
-    if (data.stringSource === "shop" && inventoryId) {
-      const item = state.inventory.find((inv) => inv.id === inventoryId);
-      if (item) {
-        item.lengthLeft = Math.max(0, Number(item.lengthLeft || 0) - lengthUsed);
-      }
-    }
+    applyInventoryUsage([
+      { source: data.stringSourceMain, inventoryId: inventoryIdMain, lengthUsed: lengthUsedMain },
+      { source: data.stringSourceCross, inventoryId: inventoryIdCross, lengthUsed: lengthUsedCross }
+    ], -1);
     state.jobs.push({
       id: createId("job"),
       customerId,
       racketId: data.racketId,
       date: data.date,
       tension: data.tension,
-      stringSource: data.stringSource,
-      inventoryId,
-      customerStringId,
-      lengthUsed,
+      mains: {
+        source: data.stringSourceMain,
+        inventoryId: inventoryIdMain,
+        customerStringId: customerStringIdMain,
+        lengthUsed: lengthUsedMain
+      },
+      crosses: {
+        source: data.stringSourceCross,
+        inventoryId: inventoryIdCross,
+        customerStringId: customerStringIdCross,
+        lengthUsed: lengthUsedCross
+      },
       laborPrice,
       stringPrice,
       totalPrice,
@@ -1844,42 +2082,99 @@ function handleJobSubmit(event) {
 }
 
 function adjustInventoryForJobChange(oldJob, newJob) {
-  if (oldJob.stringSource === "shop" && oldJob.inventoryId) {
-    const oldItem = state.inventory.find((inv) => inv.id === oldJob.inventoryId);
-    if (oldItem) {
-      oldItem.lengthLeft = Number(oldItem.lengthLeft || 0) + Number(oldJob.lengthUsed || 0);
+  applyInventoryUsage(getShopUsages(oldJob), 1);
+  applyInventoryUsage(getShopUsages(newJob), -1);
+}
+
+function getShopUsages(job) {
+  const usages = [];
+  if (job?.mains || job?.crosses) {
+    if (job.mains?.source === "shop" && job.mains.inventoryId) {
+      usages.push({ inventoryId: job.mains.inventoryId, lengthUsed: job.mains.lengthUsed });
     }
-  }
-  if (newJob.stringSource === "shop" && newJob.inventoryId) {
-    const newItem = state.inventory.find((inv) => inv.id === newJob.inventoryId);
-    if (newItem) {
-      newItem.lengthLeft = Math.max(0, Number(newItem.lengthLeft || 0) - Number(newJob.lengthUsed || 0));
+    if (job.crosses?.source === "shop" && job.crosses.inventoryId) {
+      usages.push({ inventoryId: job.crosses.inventoryId, lengthUsed: job.crosses.lengthUsed });
     }
+    return usages;
   }
+  if (job?.stringSource === "shop" && job?.inventoryId) {
+    usages.push({ inventoryId: job.inventoryId, lengthUsed: job.lengthUsed });
+  }
+  return usages;
+}
+
+function applyInventoryUsage(usages, direction) {
+  usages.forEach((usage) => {
+    if (usage.source && usage.source !== "shop") return;
+    const item = state.inventory.find((inv) => inv.id === usage.inventoryId);
+    if (!item) return;
+    const delta = Number(usage.lengthUsed || 0) * direction;
+    item.lengthLeft = Math.max(0, Number(item.lengthLeft || 0) + delta);
+  });
+}
+
+function computeShopStringCost(inventoryId, lengthUsed) {
+  const item = state.inventory.find((inv) => inv.id === inventoryId);
+  const baseLength = Number(item?.initialLength || item?.lengthLeft || 0);
+  if (!item || baseLength <= 0 || !item.costTotal) return 0;
+  const perMeter = item.costTotal / baseLength;
+  return perMeter * Number(lengthUsed || 0);
+}
+
+function resolveOrCreateCustomerString(slot, data, customerId) {
+  const searchValue = data[`customerStringSearch${slot}`];
+  let id = resolveCustomerStringId(searchValue, slot);
+  if (id) return id;
+  if (data[`stringSource${slot}`] !== "customer") return null;
+  const model = (data[`customerStringModel${slot}`] || "").trim();
+  if (!model) {
+    alert(t("alert_select_customer_string"));
+    return null;
+  }
+  const newString = {
+    id: createId("cstr"),
+    customerId,
+    model,
+    gauge: data[`customerStringGauge${slot}`] || "",
+    color: data[`customerStringColor${slot}`] || ""
+  };
+  state.customerStrings.push(newString);
+  return newString.id;
 }
 
 function resetJobForm() {
   const form = $("#jobForm");
   form.reset();
-  $('input[name="lengthUsed"]').value = 12.2;
+  $('input[name="lengthUsedMain"]').value = 6.0;
+  $('input[name="lengthUsedCross"]').value = 0;
   $('input[name="date"]').value = new Date().toISOString().slice(0, 10);
   $('input[name="jobId"]').value = "";
   $('input[name="durationSeconds"]').value = "";
   $('input[name="customerId"]').value = "";
-  $('input[name="inventoryId"]').value = "";
-  $('input[name="customerStringId"]').value = "";
+  $('input[name="inventoryIdMain"]').value = "";
+  $('input[name="inventoryIdCross"]').value = "";
+  $('input[name="customerStringIdMain"]').value = "";
+  $('input[name="customerStringIdCross"]').value = "";
   $('input[name="customerSearch"]').value = "";
-  $('input[name="inventorySearch"]').value = "";
-  $('input[name="customerStringSearch"]').value = "";
-  $('input[name="customerStringModel"]').value = "";
-  $('input[name="customerStringGauge"]').value = "";
-  $('input[name="customerStringColor"]').value = "";
-  $("#newCustomerStringFields").classList.add("hidden");
+  $('input[name="inventorySearchMain"]').value = "";
+  $('input[name="inventorySearchCross"]').value = "";
+  $('input[name="customerStringSearchMain"]').value = "";
+  $('input[name="customerStringSearchCross"]').value = "";
+  $('input[name="customerStringModelMain"]').value = "";
+  $('input[name="customerStringGaugeMain"]').value = "";
+  $('input[name="customerStringColorMain"]').value = "";
+  $('input[name="customerStringModelCross"]').value = "";
+  $('input[name="customerStringGaugeCross"]').value = "";
+  $('input[name="customerStringColorCross"]').value = "";
+  $("#newCustomerStringFieldsMain").classList.add("hidden");
+  $("#newCustomerStringFieldsCross").classList.add("hidden");
   state.lastJobCustomerId = "";
   $('input[name="durationDisplay"]').value = "00:00";
   stopStringingTimer();
   setTimerDisplay(0);
-  setStringSourceUI($('select[name="stringSource"]').value);
+  setStringSourceUI("Main", $('select[name="stringSourceMain"]').value);
+  setStringSourceUI("Cross", $('select[name="stringSourceCross"]').value);
+  setHybridUI(false);
   $("#jobCancelBtn").style.display = "none";
   updateDynamicButtonLabels();
 }
@@ -1978,11 +2273,19 @@ function populateJobForm(job) {
   form.racketId.value = job.racketId;
   form.date.value = job.date;
   form.tension.value = job.tension || "";
-  form.stringSource.value = job.stringSource;
-  setStringSourceUI(job.stringSource);
-  form.inventoryId.value = job.inventoryId || "";
-  form.customerStringId.value = job.customerStringId || "";
-  form.lengthUsed.value = job.lengthUsed || 0;
+  const slots = normalizeJobSlots(job);
+  form.stringSourceMain.value = slots.mains?.source || "shop";
+  form.stringSourceCross.value = slots.crosses?.source || "shop";
+  setStringSourceUI("Main", form.stringSourceMain.value);
+  setStringSourceUI("Cross", form.stringSourceCross.value);
+  const hybridEnabled = Number(slots.crosses?.lengthUsed || 0) > 0;
+  setHybridUI(hybridEnabled);
+  form.inventoryIdMain.value = slots.mains?.inventoryId || "";
+  form.inventoryIdCross.value = slots.crosses?.inventoryId || "";
+  form.customerStringIdMain.value = slots.mains?.customerStringId || "";
+  form.customerStringIdCross.value = slots.crosses?.customerStringId || "";
+  form.lengthUsedMain.value = slots.mains?.lengthUsed || 0;
+  form.lengthUsedCross.value = slots.crosses?.lengthUsed || 0;
   form.laborPrice.value = job.laborPrice || 0;
   form.stringPrice.value = job.stringPrice || 0;
   form.notes.value = job.notes || "";
@@ -1990,16 +2293,18 @@ function populateJobForm(job) {
   form.durationSeconds.value = job.durationSeconds || 0;
   form.durationDisplay.value = formatDuration(job.durationSeconds || 0);
   setTimerDisplay(job.durationSeconds || 0);
-  const inventoryItem = state.inventory.find((i) => i.id === job.inventoryId);
-  form.inventorySearch.value = inventoryItem ? formatInventoryLabel(inventoryItem) : "";
-  const customerStringItem = state.customerStrings.find((i) => i.id === job.customerStringId);
-  form.customerStringSearch.value = customerStringItem ? formatCustomerStringLabel(customerStringItem) : "";
+  const inventoryItemMain = state.inventory.find((i) => i.id === slots.mains?.inventoryId);
+  form.inventorySearchMain.value = inventoryItemMain ? formatInventoryLabel(inventoryItemMain) : "";
+  const inventoryItemCross = state.inventory.find((i) => i.id === slots.crosses?.inventoryId);
+  form.inventorySearchCross.value = inventoryItemCross ? formatInventoryLabel(inventoryItemCross) : "";
+  const customerStringItemMain = state.customerStrings.find((i) => i.id === slots.mains?.customerStringId);
+  form.customerStringSearchMain.value = customerStringItemMain ? formatCustomerStringLabel(customerStringItemMain) : "";
+  const customerStringItemCross = state.customerStrings.find((i) => i.id === slots.crosses?.customerStringId);
+  form.customerStringSearchCross.value = customerStringItemCross ? formatCustomerStringLabel(customerStringItemCross) : "";
   $("#jobCancelBtn").style.display = "inline-flex";
   updateDynamicButtonLabels();
 
-  const isShop = job.stringSource === "shop";
-  $('input[name="inventorySearch"]').disabled = !isShop;
-  $('input[name="stringPrice"]').disabled = !isShop;
+  $('input[name="stringPrice"]').disabled = false;
   updateRacketOptionsForCustomer(job.customerId, job.racketId);
 }
 
@@ -2033,11 +2338,8 @@ function handleDelete(event) {
   }
   if (type === "job") {
     const job = state.jobs.find((item) => item.id === id);
-    if (job && job.stringSource === "shop" && job.inventoryId) {
-      const item = state.inventory.find((inv) => inv.id === job.inventoryId);
-      if (item) {
-        item.lengthLeft = Number(item.lengthLeft || 0) + Number(job.lengthUsed || 0);
-      }
+    if (job) {
+      applyInventoryUsage(getShopUsages(job), 1);
     }
     state.jobs = state.jobs.filter((item) => item.id !== id);
   }
@@ -2160,12 +2462,16 @@ function handleExportCsv() {
           "id",
           "customerId",
           "racketId",
-          "inventoryId",
-          "customerStringId",
           "date",
           "tension",
-          "stringSource",
-          "lengthUsed",
+          "mainsSource",
+          "mainsInventoryId",
+          "mainsCustomerStringId",
+          "mainsLengthUsed",
+          "crossesSource",
+          "crossesInventoryId",
+          "crossesCustomerStringId",
+          "crossesLengthUsed",
           "laborPrice",
           "stringPrice",
           "totalPrice",
@@ -2176,12 +2482,16 @@ function handleExportCsv() {
           j.id,
           j.customerId,
           j.racketId,
-          j.inventoryId,
-          j.customerStringId,
           j.date,
           j.tension,
-          j.stringSource,
-          j.lengthUsed,
+          j.mains?.source || j.stringSource,
+          j.mains?.inventoryId || j.inventoryId,
+          j.mains?.customerStringId || j.customerStringId,
+          j.mains?.lengthUsed || j.lengthUsed,
+          j.crosses?.source || "",
+          j.crosses?.inventoryId || "",
+          j.crosses?.customerStringId || "",
+          j.crosses?.lengthUsed || "",
           j.laborPrice,
           j.stringPrice,
           j.totalPrice,
@@ -2374,24 +2684,48 @@ function setupForms() {
   const today = new Date().toISOString().slice(0, 10);
   $('input[name="date"]').value = today;
 
-  $('select[name="stringSource"]').addEventListener("change", (event) => {
-    setStringSourceUI(event.target.value);
+  const hybridToggle = $("#hybridEnabled");
+  if (hybridToggle) {
+    hybridToggle.addEventListener("change", (event) => {
+      setHybridUI(event.target.checked);
+      maybeApplyLastTension();
+    });
+  }
+
+  $('select[name="stringSourceMain"]').addEventListener("change", (event) => {
+    setStringSourceUI("Main", event.target.value);
+    maybeApplyLastTension();
+  });
+  $('select[name="stringSourceCross"]').addEventListener("change", (event) => {
+    setStringSourceUI("Cross", event.target.value);
     maybeApplyLastTension();
   });
 
-  $('input[name="inventorySearch"]').addEventListener("change", () => {
-    syncInventoryFromInput();
+  $('input[name="inventorySearchMain"]').addEventListener("change", () => {
+    syncInventoryFromInput("Main");
+    calculateStringPrice();
+    maybeApplyLastTension();
+  });
+  $('input[name="inventorySearchCross"]').addEventListener("change", () => {
+    syncInventoryFromInput("Cross");
     calculateStringPrice();
     maybeApplyLastTension();
   });
 
-  $('input[name="customerStringSearch"]').addEventListener("change", () => {
-    syncCustomerStringFromInput();
+  $('input[name="customerStringSearchMain"]').addEventListener("change", () => {
+    syncCustomerStringFromInput("Main");
+    maybeApplyLastTension();
+  });
+  $('input[name="customerStringSearchCross"]').addEventListener("change", () => {
+    syncCustomerStringFromInput("Cross");
     maybeApplyLastTension();
   });
 
-  $('input[name="customerStringSearch"]').addEventListener("input", () => {
-    syncCustomerStringFromInput();
+  $('input[name="customerStringSearchMain"]').addEventListener("input", () => {
+    syncCustomerStringFromInput("Main");
+  });
+  $('input[name="customerStringSearchCross"]').addEventListener("input", () => {
+    syncCustomerStringFromInput("Cross");
   });
 
   $('input[name="customerSearch"]').addEventListener("change", () => {
@@ -2403,9 +2737,12 @@ function setupForms() {
       state.lastJobCustomerId = customerId;
     }
     renderOptions();
-    refreshCustomerStringList();
-    $('input[name="customerStringSearch"]').value = "";
-    $('input[name="customerStringId"]').value = "";
+    refreshCustomerStringList("Main");
+    refreshCustomerStringList("Cross");
+    $('input[name="customerStringSearchMain"]').value = "";
+    $('input[name="customerStringSearchCross"]').value = "";
+    $('input[name="customerStringIdMain"]').value = "";
+    $('input[name="customerStringIdCross"]').value = "";
   });
 
   $('input[name="customerSearch"]').addEventListener("input", () => {
@@ -2415,10 +2752,14 @@ function setupForms() {
       updateRacketOptionsForCustomer(customerId);
       state.lastJobCustomerId = customerId;
     }
-    refreshCustomerStringList();
+    refreshCustomerStringList("Main");
+    refreshCustomerStringList("Cross");
   });
 
-  $('input[name="lengthUsed"]').addEventListener("input", () => {
+  $('input[name="lengthUsedMain"]').addEventListener("input", () => {
+    calculateStringPrice();
+  });
+  $('input[name="lengthUsedCross"]').addEventListener("input", () => {
     calculateStringPrice();
   });
 
@@ -2437,19 +2778,36 @@ function setupForms() {
     });
   }
 
-  setStringSourceUI($('select[name="stringSource"]').value);
-  const newStringFields = $("#newCustomerStringFields");
-  if (newStringFields) {
-    newStringFields.classList.add("hidden");
+  setStringSourceUI("Main", $('select[name="stringSourceMain"]').value);
+  setStringSourceUI("Cross", $('select[name="stringSourceCross"]').value);
+  setHybridUI(false);
+  const newStringFieldsMain = $("#newCustomerStringFieldsMain");
+  if (newStringFieldsMain) {
+    newStringFieldsMain.classList.add("hidden");
   }
-  const newStringBtn = $("#newCustomerStringBtn");
-  if (newStringBtn) {
-    newStringBtn.addEventListener("click", () => {
-      if (!newStringFields) return;
-      newStringFields.classList.toggle("hidden");
-      if (!newStringFields.classList.contains("hidden")) {
-        $('input[name="customerStringSearch"]').value = "";
-        $('input[name="customerStringId"]').value = "";
+  const newStringFieldsCross = $("#newCustomerStringFieldsCross");
+  if (newStringFieldsCross) {
+    newStringFieldsCross.classList.add("hidden");
+  }
+  const newStringBtnMain = $("#newCustomerStringBtnMain");
+  if (newStringBtnMain) {
+    newStringBtnMain.addEventListener("click", () => {
+      if (!newStringFieldsMain) return;
+      newStringFieldsMain.classList.toggle("hidden");
+      if (!newStringFieldsMain.classList.contains("hidden")) {
+        $('input[name="customerStringSearchMain"]').value = "";
+        $('input[name="customerStringIdMain"]').value = "";
+      }
+    });
+  }
+  const newStringBtnCross = $("#newCustomerStringBtnCross");
+  if (newStringBtnCross) {
+    newStringBtnCross.addEventListener("click", () => {
+      if (!newStringFieldsCross) return;
+      newStringFieldsCross.classList.toggle("hidden");
+      if (!newStringFieldsCross.classList.contains("hidden")) {
+        $('input[name="customerStringSearchCross"]').value = "";
+        $('input[name="customerStringIdCross"]').value = "";
       }
     });
   }
@@ -2537,6 +2895,22 @@ function migrateData(data) {
     migrated.settings.stringerName = migrated.settings.stringerName || "";
   }
 
+  if (version < 7) {
+    migrated.jobs = (migrated.jobs || []).map((job) => {
+      if (job.mains || job.crosses) return job;
+      return {
+        ...job,
+        mains: {
+          source: job.stringSource || "shop",
+          inventoryId: job.inventoryId || null,
+          customerStringId: job.customerStringId || null,
+          lengthUsed: job.lengthUsed || 0
+        },
+        crosses: null
+      };
+    });
+  }
+
   migrated.settings = migrated.settings || {};
   migrated.settings.stringerName = migrated.settings.stringerName || "";
 
@@ -2574,43 +2948,63 @@ if (onboarding && onboardingClose) {
 }
 
 function calculateStringPrice() {
-  const inventoryId = $('input[name="inventoryId"]').value;
-  const lengthUsed = Number($('input[name="lengthUsed"]').value || 0);
-  const item = state.inventory.find((inv) => inv.id === inventoryId);
-  const baseLength = Number(item?.initialLength || item?.lengthLeft || 0);
-  if (!item || baseLength <= 0 || !item.costTotal) return;
-  const perMeter = item.costTotal / baseLength;
-  $('input[name="stringPrice"]').value = (perMeter * lengthUsed).toFixed(2);
+  const inventoryIdMain = $('input[name="inventoryIdMain"]').value;
+  const inventoryIdCross = $('input[name="inventoryIdCross"]').value;
+  const lengthMain = Number($('input[name="lengthUsedMain"]').value || 0);
+  const lengthCross = Number($('input[name="lengthUsedCross"]').value || 0);
+  const mainCost = computeShopStringCost(inventoryIdMain, lengthMain);
+  const crossCost = computeShopStringCost(inventoryIdCross, lengthCross);
+  $('input[name="stringPrice"]').value = (mainCost + crossCost).toFixed(2);
 }
 
-function setStringSourceUI(value) {
+function setStringSourceUI(slot, value) {
   const isShop = value === "shop";
-  const inventoryLabel = $("#inventoryStringLabel");
-  const customerLabel = $("#customerStringLabel");
-  const newCustomerLabel = $("#newCustomerStringLabel");
-  const newStringFields = $("#newCustomerStringFields");
+  const inventoryLabel = $(`#inventoryStringLabel${slot}`);
+  const customerLabel = $(`#customerStringLabel${slot}`);
+  const newCustomerLabel = $(`#newCustomerStringLabel${slot}`);
+  const newStringFields = $(`#newCustomerStringFields${slot}`);
 
   if (inventoryLabel) inventoryLabel.classList.toggle("hidden", !isShop);
   if (customerLabel) customerLabel.classList.toggle("hidden", isShop);
   if (newCustomerLabel) newCustomerLabel.classList.toggle("hidden", isShop);
 
-  $('input[name="inventorySearch"]').disabled = !isShop;
-  $('input[name="stringPrice"]').disabled = !isShop;
-  $('input[name="customerStringSearch"]').disabled = isShop;
+  const inventorySearch = $(`input[name="inventorySearch${slot}"]`);
+  const customerSearch = $(`input[name="customerStringSearch${slot}"]`);
+  if (inventorySearch) inventorySearch.disabled = !isShop;
+  if (customerSearch) customerSearch.disabled = isShop;
 
-  const newStringInputs = $$('.stacked-inputs input');
+  const newStringInputs = document.querySelectorAll(`#newCustomerStringFields${slot} input`);
   newStringInputs.forEach((input) => {
     input.disabled = isShop;
   });
 
   if (!isShop) {
-    $('input[name="inventorySearch"]').value = "";
-    $('input[name="inventoryId"]').value = "";
+    if (inventorySearch) inventorySearch.value = "";
+    $(`input[name="inventoryId${slot}"]`).value = "";
   } else {
-    $('input[name="customerStringSearch"]').value = "";
-    $('input[name="customerStringId"]').value = "";
+    if (customerSearch) customerSearch.value = "";
+    $(`input[name="customerStringId${slot}"]`).value = "";
     if (newStringFields) newStringFields.classList.add("hidden");
   }
+}
+
+function setHybridUI(enabled) {
+  const checkbox = $("#hybridEnabled");
+  const crossesSection = $("#crossesSection");
+  if (checkbox) checkbox.checked = !!enabled;
+  if (crossesSection) crossesSection.classList.toggle("hidden", !enabled);
+  if (!enabled) {
+    $('input[name="lengthUsedCross"]').value = 0;
+    $('input[name="inventoryIdCross"]').value = "";
+    $('input[name="customerStringIdCross"]').value = "";
+    $('input[name="inventorySearchCross"]').value = "";
+    $('input[name="customerStringSearchCross"]').value = "";
+    $('input[name="customerStringModelCross"]').value = "";
+    $('input[name="customerStringGaugeCross"]').value = "";
+    $('input[name="customerStringColorCross"]').value = "";
+    $("#newCustomerStringFieldsCross")?.classList.add("hidden");
+  }
+  calculateStringPrice();
 }
 
 function formatDuration(seconds) {
